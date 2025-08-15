@@ -5,7 +5,7 @@ const {
   addRecipe,
   editRecipe,
   deleteRecipe,
-} = require("./recipeController");
+} = require("../controller/recipeController");
 const router = express.Router();
 
 router.get("/", getRecipes); // get all the available recipes

@@ -1,13 +1,14 @@
 require("dotenv").config();
-const express = require('express');
+const express = require("express");
 const app = express();
-const Router = require("./routes/recipe")
+const Router = require("./routes/recipe");
+const connectDB = require("./config/connection");
 
+app.use(express.json());
 const PORT = process.env.PORT || 5000;
 
-
-app.use("/recipe",Router);
-
-app.listen(PORT, ()=>{
-    console.log(`App is running at port ${PORT}`)
-})
+connectDB();
+app.use("/recipe", Router);
+app.listen(PORT, () => {
+  console.log(`App is running at port ${PORT}`);
+});
