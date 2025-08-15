@@ -1,13 +1,12 @@
 const Recipes = require("../modules/recipeModel");
 
-const getRecipes =async (res,next) => {
+const getRecipes =async (req,res,next) => {
   try {
     const recipes = await Recipes.find();
     res.json({ data: recipes });
   } catch (error) {
     next(error);
   }
-  
 };
 
 const getRecipe = async (req, res) => {
@@ -22,16 +21,41 @@ const getRecipe = async (req, res) => {
 
 };
 
-const addRecipe = (req, res) => {
-  res.json({ message: "Recipe Fetched Successfully" });
+const addRecipe = async(req, res,next) => {
+  try {
+    const recipe = await Recipes.create(req.body);
+    res.json({ data: recipe });
+  } catch (error) {
+    next(error);
+  }
 };
 
-const editRecipe = (req, res) => {
-  res.json({ message: "Recipe Fetched Successfully" });
-};
+const editRecipe = async (req,res,next) => {
+  const { id } = req.params;
+  const recipe = await req.body;
+  try{
+    if(!recipe) {
+      return res.status(404).json({ message: "Recipe not found" });
+    }
+    await Recipes.findByIdAndUpdate(id, recipe, { new: true });
+    res.json({ message: "Recipe updated successfully" });
+  }catch (error) {
+    next(error);
+  }
+  };
 
-const deleteRecipe = (req, res) => {
-  res.json({ message: "Recipe Fetched Successfully" });
+const deleteRecipe = async (req, res,next) => {
+  try {
+    const {id}= req.params;
+    const recipe = await Recipes.findByIdAndDelete(id);
+    if (!recipe) {
+      return res.status(404).json({ message: "Recipe not found" });
+    }
+    res.json({ message: "Recipe deleted successfully" });
+    
+  } catch (error) {
+    next(error);
+  }
 };
 
 module.exports = { getRecipes, getRecipe, addRecipe, editRecipe, deleteRecipe };
