@@ -1,0 +1,126 @@
+/* General Styles */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+.section-title {
+  font-weight: 600;
+  color: #2c3e50;
+  position: relative;
+  padding-bottom: 10px;
+}
+
+.section-title:after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 50px;
+  height: 3px;
+  background-color: #3498db;
+}
+
+/* Banner Section */
+.banner-section {
+  padding: 80px 0;
+  background-color: #f8f9fa;
+}
+
+.banner-title {
+  font-size: 2.8rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #2c3e50;
+}
+
+.banner-subtitle {
+  font-size: 1.2rem;
+  color: #7f8c8d;
+  margin-bottom: 20px;
+}
+
+.banner-image {
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+/* Recipe Cards */
+.recipe-card {
+  border: none;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.recipe-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.recipe-card .card-img-top {
+  height: 180px;
+  object-fit: cover;
+}
+
+/* Categories */
+.category-card {
+  transition: transform 0.3s;
+  cursor: pointer;
+}
+
+.category-card:hover {
+  transform: translateY(-5px);
+}
+
+.category-icon {
+  color: #3498db;
+}
+
+/* Newsletter */
+.newsletter-section {
+  background-color: #3498db;
+  color: white;
+}
+
+.newsletter-section .form-control {
+  border: none;
+  border-radius: 5px 0 0 5px;
+}
+
+.newsletter-section .btn {
+  border-radius: 0 5px 5px 0;
+}
+
+/* Footer */
+.social-icons a {
+  transition: color 0.3s;
+}
+
+.social-icons a:hover {
+  color: #3498db !important;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .banner-title {
+    font-size: 2rem;
+  }
+  
+  .banner-subtitle {
+    font-size: 1rem;
+  }
+  
+  .banner-section {
+    padding: 40px 0;
+    text-align: center;
+  }
+  
+  .banner-image {
+    margin-top: 30px;
+  }
+  
+  .category-card {
+    margin-bottom: 15px;
+  }
+}
