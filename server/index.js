@@ -4,8 +4,9 @@ const app = express();
 const Router = require("./routes/recipe");
 const errorMiddleware = require("./middlewares/error-middleware")
 const connectDB = require("./config/connection");
-
+const cors = require('cors');
 app.use(express.json());
+app.use(cors());
 
 const PORT = process.env.PORT || 5000;
 connectDB();

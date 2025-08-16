@@ -3,48 +3,20 @@ import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import { FaClock, FaUtensils, FaHeart, FaStar } from "react-icons/fa";
 import "../styles/Home.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Link } from "react-router-dom";
+import { Link, useLoaderData } from "react-router-dom";
+import { useState } from "react";
+import { useEffect } from "react";
 
-const Home = () => {
+const Home = ({recipes}) => {
   // Sample recipe data
-  const latestRecipes = [
-    {
-      id: 1,
-      title: "Creamy Garlic Pasta",
-      time: "25 mins",
-      category: "Pasta",
-      rating: 4.8,
-      image:
-        "https://images.unsplash.com/photo-1555949258-eb67b1ef0ceb?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-    },
-    {
-      id: 2,
-      title: "Avocado Toast",
-      time: "10 mins",
-      category: "Breakfast",
-      rating: 4.5,
-      image:
-        "https://images.unsplash.com/photo-1515442261605-65987783cb6a?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-    },
-    {
-      id: 3,
-      title: "Vegetable Curry",
-      time: "40 mins",
-      category: "Vegetarian",
-      rating: 4.7,
-      image:
-        "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-    },
-    {
-      id: 4,
-      title: "Chocolate Cake",
-      time: "60 mins",
-      category: "Dessert",
-      rating: 4.9,
-      image:
-        "https://images.unsplash.com/photo-1562440499-64c9a111f713?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-    },
-  ];
+  const [latestRecipes,setLatestRecipes] = useState([]);
+  useEffect(()=>{
+    try{
+      setLatestRecipes(recipes.slice(0, 4)); 
+    }catch(error){
+      console.error("Error fetching latest recipes:", error);
+    }
+  },[recipes])
 
   const categories = [
     { name: "Breakfast", count: 45 },
@@ -96,7 +68,7 @@ const Home = () => {
             {latestRecipes.map((recipe) => (
               <Col key={recipe.id} md={3} sm={6} className="mb-4">
                 <Card className="h-100 recipe-card">
-                  <Card.Img variant="top" src={recipe.image} />
+                  <Card.Img variant="top" src={recipe.img} />
                   <Card.Body>
                     <div className="d-flex justify-content-between mb-2">
                       <span className="text-muted">
