@@ -31,11 +31,12 @@ const Login = () => {
   const handelSubmit = async (e) => {
     e.preventDefault();
     // Handle login logic here
-    const isSuccess = await axios
+    await axios
       .post("http://localhost:3000/api/v1/user/login", { email, password })
       .then((res) => {
         localStorage.setItem("token", res.data.token);
         localStorage.setItem("user", res.data.user);
+        navigate("/");
       })
       .catch((err) => {
         setError(err.response.data.message);
@@ -44,7 +45,7 @@ const Login = () => {
         setTimeout(() => {
           setError("");
         }, 3000);
-        navigate("/");
+        
       });
       
   };

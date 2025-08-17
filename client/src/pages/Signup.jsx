@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Container,
   Row,
@@ -18,8 +18,9 @@ import {
   FaBook,
   FaCookieBite,
 } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../styles/Signup.css";
+import axios from "axios";
 
 const Signup = () => {
   const [username, setUsername] = React.useState("");
@@ -27,8 +28,38 @@ const Signup = () => {
   const [password, setPassword] = React.useState("");
   const [confirmPassword, setConfirmPassword] = React.useState("");
   const [error, setError] = React.useState("");
+  const navigate = useNavigate();
 
-  
+  // console.log("passeword", password)
+  // console.log("confirmPassword", confirmPassword)
+
+  const handelSubmit = async (e) => {
+    e.preventDefault();
+    // Handle signup logic here
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+    }
+    await axios
+      .post("http://localhost:3000/api/v1/user/signup", {
+        username,
+        email,
+        password,
+      })
+      .then((res) => {
+        localStorage.setItem("token", res.data.token);
+        localStorage.setItem("user", res.data.user);
+        navigate("/");
+      })
+      .catch((err) => {
+        setError(err.response.data.message);
+      })
+      .finally(() => {
+        setTimeout(() => {
+          setError("");
+        }, 3000);
+      });
+  };
+
   return (
     <Container fluid className="signup-container">
       <Row className="align-items-center min-vh-100 g-0">
@@ -72,7 +103,7 @@ const Signup = () => {
                 <p className="text-muted">Start your culinary journey</p>
               </div>
 
-              <Form>
+              <Form onSubmit={handelSubmit}>
                 {/* Username Field */}
                 <Form.Group className="mb-3">
                   <Form.Label>Username</Form.Label>
@@ -80,7 +111,11 @@ const Signup = () => {
                     <InputGroup.Text>
                       <FaUser />
                     </InputGroup.Text>
-                    <Form.Control type="text" placeholder="chef_username" />
+                    <Form.Control
+                      type="text"
+                      placeholder="chef_username"
+                      onChange={(e) => setUsername(e.target.value)}
+                    />
                   </InputGroup>
                 </Form.Group>
 
@@ -91,7 +126,11 @@ const Signup = () => {
                     <InputGroup.Text>
                       <FaEnvelope />
                     </InputGroup.Text>
-                    <Form.Control type="email" placeholder="your@email.com" />
+                    <Form.Control
+                      type="email"
+                      placeholder="your@email.com"
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
                   </InputGroup>
                 </Form.Group>
 
@@ -105,6 +144,7 @@ const Signup = () => {
                     <Form.Control
                       type="password"
                       placeholder="Create password"
+                      onChange={(e) => setPassword(e.target.value)}
                     />
                   </InputGroup>
                   <Form.Text className="text-muted">
@@ -122,10 +162,13 @@ const Signup = () => {
                     <Form.Control
                       type="password"
                       placeholder="Confirm password"
+                      onChange={(e) => setConfirmPassword(e.target.value)}
                     />
                   </InputGroup>
                 </Form.Group>
-
+                {error && (
+                  <p className="text-danger text-center fw-bold">{error}</p>
+                )}
                 {/* Submit Button */}
                 <Button
                   variant="primary"
@@ -138,7 +181,8 @@ const Signup = () => {
                 {/* Login Link */}
                 <div className="text-center mt-4">
                   <p className="text-muted">
-                    Already have an account? <Link to="/user/login">Log in</Link>
+                    Already have an account?{" "}
+                    <Link to="/user/login">Log in</Link>
                   </p>
                 </div>
               </Form>

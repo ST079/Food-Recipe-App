@@ -8,6 +8,8 @@ import AllRecipes from "./pages/AllRecipes";
 import axios from "axios";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
+import RecipeDetail from "./pages/RecipeDetail";
+import AddRecipe from "./pages/AddRecipe";
 const App = () => {
   const [recipes, setRecipes] = React.useState([]);
   React.useEffect(() => {
@@ -25,12 +27,17 @@ const App = () => {
   return (
     <Routes>
       <Route path="/" element={<UserLayout />}>
-        <Route index element={<Home recipes={recipes} />}/>
+        <Route index element={<Home recipes={recipes} />} />
         <Route path="/about" element={<About />} />
-        <Route path="/recipes" element={<AllRecipes recipes={recipes} setRecipes={setRecipes}/>} />
+        <Route
+          path="/recipes"
+          element={<AllRecipes recipes={recipes} setRecipes={setRecipes} />}
+        />
+        <Route path="/recipes/:id" element={<RecipeDetail />} />
+        <Route path="/add-recipe" element={<AddRecipe/>} />
         <Route path="/favourites" element={<Favourites recipes={recipes} />} />
-        <Route path="/user/sign-up" element={<Signup/>} />
-        <Route path="/user/login" element={<Login/>} />
+        <Route path="/user/sign-up" element={<Signup />} />
+        <Route path="/user/login" element={<Login />} />
       </Route>
     </Routes>
   );

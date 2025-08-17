@@ -18,6 +18,7 @@ import {
   FaFilter,
   FaStar,
 } from "react-icons/fa";
+import { BiSolidBookAdd } from "react-icons/bi";
 import { GiCook } from "react-icons/gi";
 import { Link } from "react-router-dom";
 import "../styles/Recipes.css";
@@ -85,7 +86,7 @@ const AllRecipes = ({recipes,setRecipes}) => {
 
       {/* Search and Filter */}
       <Row className="mb-4 g-3">
-        <Col md={8}>
+        <Col md={6}>
           <InputGroup>
             <InputGroup.Text>
               <FaSearch />
@@ -114,6 +115,16 @@ const AllRecipes = ({recipes,setRecipes}) => {
               ))}
             </Form.Select>
           </InputGroup>
+        </Col>
+        <Col>
+          <Button
+            as={Link}
+            to="/add-recipe"
+            variant="primary"
+          >
+            <BiSolidBookAdd className="me-2" />
+            Add New Recipe
+          </Button>
         </Col>
       </Row>
 
@@ -158,7 +169,7 @@ const AllRecipes = ({recipes,setRecipes}) => {
                 <Card.Footer className="bg-white border-0">
                   <Button
                     as={Link}
-                    to={`/recipe/${recipe._id}`}
+                    to={`/recipes/${recipe._id}`}
                     variant="outline-primary"
                     size="sm"
                   >
