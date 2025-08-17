@@ -38,7 +38,7 @@ const Favorites = ({ recipes }) => {
                 </div>
                 <Card.Img
                   variant="top"
-                  src={recipe.image}
+                  src={recipe.img}
                   className="recipe-image"
                 />
                 <Card.Body>
@@ -61,7 +61,7 @@ const Favorites = ({ recipes }) => {
                 <Card.Footer className="bg-white border-0">
                   <Button
                     as={Link}
-                    to={`/recipe/${recipe.id}`}
+                    to={`/recipe/${recipe.slug}`}
                     variant="outline-primary"
                     size="sm"
                   >

@@ -8,6 +8,7 @@ const MONGO_URI = process.env.DB;// Change to your DB name
 const recipes = [
   {
     title: "Spaghetti Bolognese",
+    slug: "spaghetti-bolognese",
     ingredients: [
       "spaghetti",
       "ground beef",
@@ -24,6 +25,7 @@ const recipes = [
   },
   {
     title: "Chicken Curry",
+    slug: "chicken-curry",
     ingredients: [
       "chicken",
       "onion",
@@ -41,6 +43,7 @@ const recipes = [
   },
   {
     title: "Pancakes",
+    slug: "pancakes",
     ingredients: ["flour", "milk", "egg", "butter", "sugar"],
     instructions:
       "Mix ingredients. Pour onto hot griddle. Flip when bubbles form. Serve with syrup.",
@@ -51,6 +54,7 @@ const recipes = [
   },
   {
     title: "Grilled Cheese Sandwich",
+    slug: "grilled-cheese-sandwich",
     ingredients: ["bread", "cheddar cheese", "butter"],
     instructions:
       "Butter bread, add cheese, and grill until golden brown on both sides.",
@@ -61,6 +65,7 @@ const recipes = [
   },
   {
     title: "Caesar Salad",
+    slug: "caesar-salad",
     ingredients: [
       "romaine lettuce",
       "croutons",
@@ -75,6 +80,7 @@ const recipes = [
   },
   {
     title: "Vegetable Stir Fry",
+    slug: "vegetable-stir-fry",
     ingredients: [
       "mixed vegetables",
       "soy sauce",
@@ -91,6 +97,7 @@ const recipes = [
   },
   {
     title: "Beef Tacos",
+    slug: "beef-tacos",
     ingredients: ["taco shells", "ground beef", "lettuce", "tomato", "cheese"],
     instructions:
       "Cook beef with seasoning. Fill taco shells with beef and toppings.",
@@ -101,6 +108,7 @@ const recipes = [
   },
   {
     title: "Chocolate Cake",
+    slug: "chocolate-cake",
     ingredients: ["flour", "sugar", "cocoa powder", "eggs", "butter", "milk"],
     instructions:
       "Mix dry ingredients. Add wet ingredients. Bake at 180°C for 30 minutes.",
@@ -111,6 +119,7 @@ const recipes = [
   },
   {
     title: "Omelette",
+    slug: "omelette",
     ingredients: ["eggs", "milk", "cheese", "bell peppers", "onion"],
     instructions:
       "Beat eggs with milk. Cook with vegetables and cheese until set.",
@@ -121,6 +130,7 @@ const recipes = [
   },
   {
     title: "Margherita Pizza",
+    slug: "margherita-pizza",
     ingredients: ["pizza dough", "tomato sauce", "mozzarella", "basil"],
     instructions:
       "Spread sauce on dough. Add cheese and basil. Bake until golden.",
@@ -131,6 +141,7 @@ const recipes = [
   },
   {
     title: "Tomato Soup",
+    slug: "tomato-soup",
     ingredients: ["tomatoes", "onion", "garlic", "vegetable broth"],
     instructions:
       "Cook tomatoes with onion and garlic. Blend and simmer with broth.",
@@ -141,6 +152,7 @@ const recipes = [
   },
   {
     title: "BBQ Chicken",
+    slug: "bbq-chicken",
     ingredients: ["chicken", "BBQ sauce"],
     instructions: "Coat chicken with BBQ sauce. Grill until cooked through.",
     time: 35,
@@ -150,6 +162,7 @@ const recipes = [
   },
   {
     title: "French Toast",
+    slug: "french-toast",
     ingredients: ["bread", "eggs", "milk", "sugar", "cinnamon"],
     instructions:
       "Dip bread in egg mixture. Cook on skillet until golden brown.",
@@ -160,6 +173,7 @@ const recipes = [
   },
   {
     title: "Burrito",
+    slug: "burrito",
     ingredients: ["tortilla", "rice", "beans", "chicken", "cheese"],
     instructions: "Fill tortilla with ingredients. Wrap tightly and serve.",
     time: 20,
@@ -169,6 +183,7 @@ const recipes = [
   },
   {
     title: "Fried Rice",
+    slug: "fried-rice",
     ingredients: ["rice", "egg", "soy sauce", "mixed vegetables"],
     instructions: "Fry rice with vegetables and egg. Add soy sauce.",
     time: 15,
@@ -178,6 +193,7 @@ const recipes = [
   },
   {
     title: "Fish Curry",
+    slug: "fish-curry",
     ingredients: ["fish", "curry powder", "coconut milk", "onion", "tomato"],
     instructions:
       "Cook onion and tomato. Add fish, curry powder, and coconut milk. Simmer.",

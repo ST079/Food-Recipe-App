@@ -18,6 +18,10 @@ const Home = ({recipes}) => {
     }
   },[recipes])
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  },[])
+
   const categories = [
     { name: "Breakfast", count: 45 },
     { name: "Lunch", count: 78 },
@@ -66,7 +70,7 @@ const Home = ({recipes}) => {
 
           <Row>
             {latestRecipes.map((recipe) => (
-              <Col key={recipe.id} md={3} sm={6} className="mb-4">
+              <Col key={recipe._id} md={3} sm={6} className="mb-4">
                 <Card className="h-100 recipe-card">
                   <Card.Img variant="top" src={recipe.img} />
                   <Card.Body>

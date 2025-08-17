@@ -6,12 +6,14 @@ import About from "./pages/About";
 import Favourites from "./pages/Favourites";
 import AllRecipes from "./pages/AllRecipes";
 import axios from "axios";
+import Signup from "./pages/Signup";
+import Login from "./pages/Login";
 const App = () => {
   const [recipes, setRecipes] = React.useState([]);
   React.useEffect(() => {
     const fetchRecipes = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/recipe");
+        const res = await axios.get("http://localhost:3000/api/v1/recipe");
         setRecipes(res.data.data);
       } catch (error) {
         console.error("Error fetching recipes:", error);
@@ -27,6 +29,8 @@ const App = () => {
         <Route path="/about" element={<About />} />
         <Route path="/recipes" element={<AllRecipes recipes={recipes} setRecipes={setRecipes}/>} />
         <Route path="/favourites" element={<Favourites recipes={recipes} />} />
+        <Route path="/user/sign-up" element={<Signup/>} />
+        <Route path="/user/login" element={<Login/>} />
       </Route>
     </Routes>
   );

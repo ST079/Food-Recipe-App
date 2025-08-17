@@ -1,4 +1,5 @@
 const Recipes = require("../modules/recipeModel");
+const {slugGenerator} = require("../utils/textPraser");
 
 const getRecipes =async (req,res,next) => {
   try {
@@ -23,6 +24,8 @@ const getRecipe = async (req, res) => {
 
 const addRecipe = async(req, res,next) => {
   try {
+    req.body.slug = slugGenerator(req.body.title);
+    console.log(req.body.slug);
     const recipe = await Recipes.create(req.body);
     res.json({ data: recipe });
   } catch (error) {

@@ -43,7 +43,7 @@ const AllRecipes = ({recipes,setRecipes}) => {
   const toggleFavorite = (id) => {
     setRecipes(
       recipes.map((recipe) =>
-        recipe.id === id
+        recipe._id === id
           ? { ...recipe, isFavorite: !recipe.isFavorite }
           : recipe
       )
