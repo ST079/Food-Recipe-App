@@ -18,7 +18,7 @@ import {
   FaFilter,
   FaStar,
 } from "react-icons/fa";
-import { BiSolidBookAdd } from "react-icons/bi";
+
 import { GiCook } from "react-icons/gi";
 import { Link } from "react-router-dom";
 import "../styles/Recipes.css";
@@ -86,7 +86,7 @@ const AllRecipes = ({recipes,setRecipes}) => {
 
       {/* Search and Filter */}
       <Row className="mb-4 g-3">
-        <Col md={6}>
+        <Col md={8}>
           <InputGroup>
             <InputGroup.Text>
               <FaSearch />
@@ -115,16 +115,6 @@ const AllRecipes = ({recipes,setRecipes}) => {
               ))}
             </Form.Select>
           </InputGroup>
-        </Col>
-        <Col>
-          <Button
-            as={Link}
-            to="/add-recipe"
-            variant="primary"
-          >
-            <BiSolidBookAdd className="me-2" />
-            Add New Recipe
-          </Button>
         </Col>
       </Row>
 
@@ -166,7 +156,7 @@ const AllRecipes = ({recipes,setRecipes}) => {
                     {recipe.category}
                   </Card.Text>
                 </Card.Body>
-                <Card.Footer className="bg-white border-0">
+                <Card.Footer className="bg-white border-0  d-flex justify-content-between align-items-center">
                   <Button
                     as={Link}
                     to={`/recipes/${recipe._id}`}
@@ -175,6 +165,10 @@ const AllRecipes = ({recipes,setRecipes}) => {
                   >
                     View Recipe
                   </Button>
+
+                  <Card.Text className="mt-2 text-muted">
+                    {recipe.author?.username || "Unknown Author"}
+                  </Card.Text>
                 </Card.Footer>
               </Card>
             </Col>
@@ -191,7 +185,7 @@ const AllRecipes = ({recipes,setRecipes}) => {
       {filteredRecipes.length > recipesPerPage && (
         <Row className="mt-4">
           <Col className="d-flex justify-content-center ">
-            <Pagination >
+            <Pagination>
               <Pagination.Prev
                 disabled={activePage === 1}
                 onClick={() => setActivePage(activePage - 1)}

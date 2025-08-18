@@ -114,7 +114,7 @@ const AddRecipe = () => {
               </div>
             </Card.Header>
             <Card.Body>
-              <Form onSubmit={handleSubmit}>
+              <Form onSubmit={handleSubmit} enctype="multipart/form-data">
                 {/* Recipe Title */}
                 <Form.Group className="mb-4">
                   <FloatingLabel

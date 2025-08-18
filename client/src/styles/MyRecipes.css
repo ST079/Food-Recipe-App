@@ -1,0 +1,95 @@
+/* My Recipes Page Styles */
+.my-recipes-container {
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+.my-recipes-card {
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.my-recipes-header {
+  background-color: #ffffff;
+  padding: 1.5rem;
+  border-bottom: none;
+}
+
+.my-recipes-header h2 {
+  font-weight: 600;
+}
+
+/* Search and Filter Bar */
+.search-filter-bar {
+  background-color: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+/* Recipe Cards */
+.recipe-card {
+  border: none;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.recipe-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.recipe-image-container {
+  position: relative;
+  height: 180px !important;
+  overflow: hidden;
+}
+
+.recipe-image {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+
+.recipe-card:hover .recipe-image {
+  transform: scale(1.05);
+}
+
+.recipe-category {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 0.8rem;
+}
+
+.recipe-meta {
+  font-size: 0.9rem;
+}
+
+.recipe-actions .btn {
+  width: 48%;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 3rem 0;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 767.98px) {
+  .my-recipes-container {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+  
+  .my-recipes-header {
+    padding: 1rem;
+  }
+  
+  .my-recipes-header h2 {
+    font-size: 1.5rem;
+  }
+}

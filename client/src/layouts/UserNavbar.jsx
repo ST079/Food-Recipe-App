@@ -10,7 +10,10 @@ const UserNavbar = () => {
   const userName = localStorage.getItem("user") || "Chef Name";
 
   const { pathname } = useLocation();
+  const[isLoggedIn, setIsLoggedIn] = React.useState(token ? true : false);
+  
 
+ 
   return (
     <div>
       <nav className="navbar navbar-expand-lg bg-body-tertiary">
@@ -46,7 +49,7 @@ const UserNavbar = () => {
                 <Link
                   className={`nav-link ${
                     pathname === "/about" ? "active" : ""
-                  }`}
+                  } ${token ? "" : "disabled"}`}
                   to="/about"
                 >
                   About
@@ -57,7 +60,7 @@ const UserNavbar = () => {
                 <Link
                   className={`nav-link ${
                     pathname === "/recipes" ? "active" : ""
-                  }`}
+                  } ${token ? "" : "disabled"}`}
                   to="/recipes"
                 >
                   Recipes
@@ -68,10 +71,22 @@ const UserNavbar = () => {
                 <Link
                   className={`nav-link ${
                     pathname === "/favourites" ? "active" : ""
-                  }`}
+                  } ${token ? "" : "disabled"}`}
                   to="/favourites"
                 >
                   Favourites
+                </Link>
+              </li>
+
+              <li className="nav-item">
+                <Link
+                  className={`nav-link ${
+                    pathname === "/my-recipes" ? "active" : ""
+                  } ${token ? "" : "disabled"}`}
+                  aria-current="page"
+                  to="/my-recipes"
+                >
+                  My Recipes
                 </Link>
               </li>
 

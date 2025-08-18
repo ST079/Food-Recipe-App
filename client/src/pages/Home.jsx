@@ -44,7 +44,7 @@ const Home = ({recipes}) => {
                 of recipes from home cooks around the world.
               </p>
               <Link to="/recipes">
-                <Button variant="primary" size="lg" className="mt-3">
+                <Button variant="primary" size="lg" className={`mt-3 ${!localStorage.getItem("token") ? "d-none" : ""}`}>
                   Explore Recipes
                 </Button>
               </Link>
