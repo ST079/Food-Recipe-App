@@ -1,15 +1,18 @@
 const mongoose = require("mongoose");
-
+const {ObjectId} = mongoose.Schema.Types;
 const recipeSchema = mongoose.Schema(
   {
     title: { type: String, required: true, trim: true },
     slug: { type: String, required: true },
     ingredients: { type: [String], required: true },
-    instructions: { type: String, required: true },
+    instructions: { type: [String], required: true },
+    servings: { type: Number, min: 1, required: true },
+    author : { type: ObjectId, required: true,  ref:"User" },
     time: { type: Number, min: 1 },
     category: { type: String, required: true },
     rating: { type: Number, min: 0, max: 5 },
     img: { type: String },
+    notes: { type: String },
   },
   { timestamps: true }
 );

@@ -1,5 +1,7 @@
 const Recipes = require("../modules/recipeModel");
 const {slugGenerator} = require("../utils/textPraser");
+const multer = require("multer");
+const upload = multer({ dest: "uploads/" });
 
 const getRecipes =async (req,res,next) => {
   try {
