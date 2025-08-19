@@ -32,7 +32,7 @@ const Login = () => {
     e.preventDefault();
     // Handle login logic here
     await axios
-      .post("https://food-recipe-app-mern.onrender.com/api/v1/user/login", { email, password })
+      .post("http://localhost:3000/api/v1/user/login", { email, password })
       .then((res) => {
         localStorage.setItem("token", res.data.token);
         localStorage.setItem("user", res.data.user);
@@ -150,12 +150,12 @@ const Login = () => {
                 </Button>
 
                 {/* Signup Link */}
-                {/* <div className="text-center mt-4">
+                <div className="text-center mt-4">
                   <p className="text-muted">
                     Don't have an account?{" "}
                     <Link to="/user/sign-up">Sign up</Link>
                   </p>
-                </div> */}
+                </div>
 
                 {/* Social Login Options */}
                 {/* <div className="text-center mt-4">

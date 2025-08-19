@@ -53,7 +53,7 @@ const MyRecipes = ({ recipes, setRecipes }) => {
   });
 
   const deleteRecipe = async (id) => {
-    await axios.delete(`https://food-recipe-app-mern.onrender.com/api/v1/recipe/${id}`);
+    await axios.delete(`http://localhost:3000/api/v1/recipe/${id}`);
     setRecipes(recipes.filter((recipe) => recipe._id !== id));
     setShowDeleteNotification(true);
   };
@@ -126,7 +126,7 @@ const MyRecipes = ({ recipes, setRecipes }) => {
                             src={
                               recipe.img.startsWith("http")
                                 ? recipe.img
-                                : `https://food-recipe-app-mern.onrender.com${recipe.img}`
+                                : `http://localhost:3000${recipe.img}`
                             }
                             className="recipe-image"
                           />

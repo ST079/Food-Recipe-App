@@ -94,7 +94,7 @@ const Home = ({ recipes }) => {
                     src={
                       recipe.img.startsWith("http")
                         ? recipe.img
-                        : `https://food-recipe-app-mern.onrender.com${recipe.img}`
+                        : `http://localhost:3000${recipe.img}`
                     }
                   />
                   <Card.Body>

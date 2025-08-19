@@ -12,9 +12,7 @@ const UserNavbar = () => {
 
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  
 
- 
   return (
     <div>
       <nav className="navbar navbar-expand-lg bg-body-tertiary">
@@ -92,7 +90,7 @@ const UserNavbar = () => {
               </li>
 
               <li className="nav-item">
-                <Link className="nav-link disabled" aria-disabled="true">
+                <Link className="nav-link" aria-disabled="true">
                   Support
                 </Link>
               </li>
@@ -104,9 +102,11 @@ const UserNavbar = () => {
                 <Link to="/user/login">
                   <button className="btn btn-success">Login</button>
                 </Link>
-                {/* <Link to="/user/sign-up">
-                </Link> */}
-                  <button className="btn btn-danger mx-2 disabled">Sign Up</button>
+                <Link to="/user/sign-up">
+                  <button className="btn btn-danger mx-2">
+                    Sign Up
+                  </button>
+                </Link>
               </div>
             ) : (
               ""

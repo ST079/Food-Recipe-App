@@ -29,7 +29,7 @@ const Favorites = ({ recipes, setRecipes }) => {
     );
 
     try {
-      await axios.patch(`https://food-recipe-app-mern.onrender.com/api/v1/recipe/${id}/favourite`);
+      await axios.patch(`http://localhost:3000/api/v1/recipe/${id}/favourite`);
       setShowSuccessNotification(true);
     } catch (error) {
       console.error("Error toggling favorite:", error);
@@ -69,7 +69,7 @@ const Favorites = ({ recipes, setRecipes }) => {
                   src={
                     recipe.img.startsWith("http")
                       ? recipe.img
-                      : `https://food-recipe-app-mern.onrender.com${recipe.img}`
+                      : `http://localhost:3000${recipe.img}`
                   }
                   className="recipe-image"
                 />
