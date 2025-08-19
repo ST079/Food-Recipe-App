@@ -12,6 +12,10 @@ import RecipeDetails from "./pages/RecipeDetails";
 import AddRecipe from "./pages/AddRecipe";
 import MyRecipes from "./pages/MyRecipes";
 import EditRecipe from "./pages/EditRecipe";
+import NotFound from "./pages/NotFound"
+
+
+
 const App = () => {
   const [recipes, setRecipes] = React.useState([]);
   React.useEffect(() => {
@@ -37,11 +41,14 @@ const App = () => {
         />
         <Route path="/recipes/:id" element={<RecipeDetails />} />
         <Route path="/add-recipe" element={<AddRecipe />} />
-        <Route path="/edit-recipe/:id" element={<EditRecipe />} />
-        <Route path="/my-recipes" element={<MyRecipes />} />
+        <Route path="/edit-recipe/:id" element={<EditRecipe/>} />
+        <Route path="/my-recipes" element={<MyRecipes recipes={recipes} setRecipes={setRecipes} />} />
         <Route path="/favourites" element={<Favourites recipes={recipes} />} />
         <Route path="/user/sign-up" element={<Signup />} />
         <Route path="/user/login" element={<Login />} />
+
+
+        <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
   );

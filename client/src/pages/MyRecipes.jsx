@@ -24,44 +24,12 @@ import { BiSolidBookAdd } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import "../styles/MyRecipes.css";
 
-const MyRecipes = () => {
-  // Sample recipe data
-  const [recipes, setRecipes] = useState([
-    {
-      id: 1,
-      title: "Creamy Garlic Pasta",
-      time: "25 mins",
-      category: "Dinner",
-      rating: 4,
-      image:
-        "https://images.unsplash.com/photo-1555949258-eb67b1ef0ceb?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-      lastEdited: "2023-05-15",
-    },
-    {
-      id: 2,
-      title: "Avocado Toast",
-      time: "10 mins",
-      category: "Breakfast",
-      rating: 5,
-      image:
-        "https://images.unsplash.com/photo-1515442261605-65987783cb6a?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-      lastEdited: "2023-06-20",
-    },
-    {
-      id: 3,
-      title: "Chocolate Chip Cookies",
-      time: "45 mins",
-      category: "Dessert",
-      rating: 4,
-      image:
-        "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-      lastEdited: "2023-04-10",
-    },
-  ]);
-
+const MyRecipes = ({ recipes, setRecipes }) => {
+  const MyRecipes = recipes.filter(
+    (recipe) => recipe.author === localStorage.getItem("user")
+  );
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const [sortBy, setSortBy] = useState("recent");
 
   const categories = [
     "All",
@@ -72,7 +40,7 @@ const MyRecipes = () => {
     "Snack",
   ];
 
-  const filteredRecipes = recipes.filter((recipe) => {
+  const filteredRecipes = MyRecipes.filter((recipe) => {
     const matchesSearch = recipe.title
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
@@ -81,19 +49,8 @@ const MyRecipes = () => {
     return matchesSearch && matchesCategory;
   });
 
-  const sortedRecipes = [...filteredRecipes].sort((a, b) => {
-    if (sortBy === "recent") {
-      return new Date(b.lastEdited) - new Date(a.lastEdited);
-    } else if (sortBy === "rating") {
-      return b.rating - a.rating;
-    } else if (sortBy === "time") {
-      return parseInt(a.time) - parseInt(b.time);
-    }
-    return 0;
-  });
-
   const deleteRecipe = (id) => {
-    setRecipes(recipes.filter((recipe) => recipe.id !== id));
+    setRecipes(recipes.filter((recipe) => recipe._id !== id));
   };
 
   return (
@@ -124,7 +81,7 @@ const MyRecipes = () => {
                       />
                     </InputGroup>
                   </Col>
-                  <Col md={3}>
+                  <Col md={`${recipes.length > 0 ? 3 : 6}`}>
                     <InputGroup>
                       <InputGroup.Text>
                         <FaFilter />
@@ -141,25 +98,27 @@ const MyRecipes = () => {
                       </Form.Select>
                     </InputGroup>
                   </Col>
-                  <Col md={3}>
-                    <Button as={Link} to="/add-recipe" variant="primary">
-                      <BiSolidBookAdd className="me-2" />
-                      Add New Recipe
-                    </Button>
-                  </Col>
+                  {MyRecipes.length > 0 && (
+                    <Col md={3}>
+                      <Button as={Link} to="/add-recipe" variant="primary">
+                        <BiSolidBookAdd className="me-2" />
+                        Add New Recipe
+                      </Button>
+                    </Col>
+                  )}
                 </Row>
               </div>
 
               {/* Recipe Grid */}
-              {sortedRecipes.length > 0 ? (
+              {filteredRecipes.length > 0 ? (
                 <Row xs={1} md={2} lg={3} className="g-4">
-                  {sortedRecipes.map((recipe) => (
-                    <Col key={recipe.id}>
+                  {filteredRecipes.map((recipe) => (
+                    <Col key={recipe._id}>
                       <Card className="recipe-card h-100">
                         <div className="recipe-image-container">
                           <Card.Img
                             variant="top"
-                            src={recipe.image}
+                            src={`http://localhost:3000${recipe.img}`}
                             className="recipe-image"
                           />
                           <Badge bg="primary" className="recipe-category">
@@ -179,7 +138,7 @@ const MyRecipes = () => {
                           <div className="recipe-actions d-flex justify-content-between">
                             <Button
                               as={Link}
-                              to={`/edit-recipe/${recipe.id}`}
+                              to={`/edit-recipe/${recipe._id}`}
                               variant="outline-primary"
                               size="sm"
                             >
@@ -188,7 +147,7 @@ const MyRecipes = () => {
                             <Button
                               variant="outline-danger"
                               size="sm"
-                              onClick={() => deleteRecipe(recipe.id)}
+                              onClick={() => deleteRecipe(recipe._id)}
                             >
                               <FaTrash className="me-1" /> Delete
                             </Button>

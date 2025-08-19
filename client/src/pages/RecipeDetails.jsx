@@ -114,11 +114,11 @@ const RecipeDetails = () => {
 
         <Card.Body>
           {/* Recipe Description */}
-          <Row className="mb-4">
+          {/* <Row className="mb-4">
             <Col>
               <p className="recipe-description">{recipe.description}</p>
             </Col>
-          </Row>
+          </Row> */}
 
           <Row>
             {/* Left Column - Ingredients */}

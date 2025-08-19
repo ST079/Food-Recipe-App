@@ -6,8 +6,10 @@ import {
   Row,
   Col,
   Card,
-  InputGroup,
   FloatingLabel,
+  InputGroup,
+  ListGroup,
+  Accordion,
 } from "react-bootstrap";
 import {
   FaUtensils,
@@ -16,39 +18,50 @@ import {
   FaBookOpen,
   FaStar,
   FaImage,
-  FaPlusCircle,
+  FaPlus,
+  FaTrash,
+  FaUserFriends,
 } from "react-icons/fa";
 import { PiChefHat } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
 import "../styles/AddRecipe.css";
+import axios from "axios";
+import { useRef } from "react";
 
 const AddRecipe = () => {
   const [recipe, setRecipe] = useState({
     title: "",
     ingredients: [""],
+    author: "",
     instructions: [""],
-    time: "",
+    servings: 2,
+    time: 30,
     category: "",
     rating: 0,
-    image: null,
-    imagePreview: null,
+    img: "",
+    notes: "",
   });
 
+  const [imagePreview, setImagePreview] = useState(null);
   const categories = [
     "Breakfast",
-    "Brunch",
     "Lunch",
     "Dinner",
     "Dessert",
     "Appetizer",
     "Snack",
-    "Beverage",
   ];
+
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setRecipe({ ...recipe, [name]: value });
+    setRecipe((pre) => ({ ...pre, [name]: value }));
+  };
+
+  const handleNumberChange = (e) => {
+    const { name, value } = e.target;
+    setRecipe({ ...recipe, [name]: parseInt(value) || 0 });
   };
 
   const handleIngredientChange = (index, value) => {
@@ -80,63 +93,99 @@ const AddRecipe = () => {
     const newInstructions = recipe.instructions.filter((_, i) => i !== index);
     setRecipe({ ...recipe, instructions: newInstructions });
   };
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setRecipe({
-          ...recipe,
-          image: file,
-          imagePreview: reader.result,
-        });
-      };
-      reader.readAsDataURL(file);
+      setRecipe({ ...recipe, img: file }); // store file in state
+      setImagePreview(URL.createObjectURL(file)); // show preview
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Recipe submitted:", recipe);
-    // Here you would typically send the data to your backend
-    navigate("/my-recipes"); // Redirect after submission
-  };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const formData = new FormData();
+
+      // Append simple fields
+      formData.append("title", recipe.title);
+      formData.append("author", localStorage.getItem("user") || "Anonymous");
+      formData.append("servings", recipe.servings.toString());
+      formData.append("time", recipe.time.toString());
+      formData.append("category", recipe.category);
+      formData.append("rating", recipe.rating.toString());
+      if (recipe.notes) formData.append("notes", recipe.notes);
+
+      // Append arrays properly
+      recipe.ingredients.forEach((ingredient, index) => {
+        formData.append(`ingredients[${index}]`, ingredient);
+      });
+
+      recipe.instructions.forEach((instruction, index) => {
+        formData.append(`instructions[${index}]`, instruction);
+      });
+
+      // Append image if it exists
+      if (recipe.img instanceof File) {
+        formData.append("img", recipe.img);
+      } 
+
+      for (let [key, value] of formData.entries()) {
+        console.log(key, value);
+      }
+
+      const { data } = await axios.post(
+        "http://localhost:3000/api/v1/recipe",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log("Recipe added successfully:", data);
+      navigate("/my-recipies");
+    } catch (error) {
+      console.error("Error adding recipe:", {
+        message: error.message,
+        response: error.response?.data,
+      });
+    }
+  };
   return (
     <Container className="add-recipe-container py-5">
       <Row className="justify-content-center">
         <Col lg={10}>
-          <Card className="add-recipe-card shadow-sm">
+          <Card className="add-recipe-card">
             <Card.Header className="recipe-card-header">
               <div className="d-flex align-items-center">
                 <PiChefHat size={28} className="me-3" />
-                <h2 className="mb-0">Create New Recipe</h2>
+                <h2 className="display-4 mb-0">Create New Recipe</h2>
               </div>
             </Card.Header>
             <Card.Body>
-              <Form onSubmit={handleSubmit} enctype="multipart/form-data">
-                {/* Recipe Title */}
-                <Form.Group className="mb-4">
-                  <FloatingLabel
-                    label={
-                      <span>
-                        <FaUtensils className="me-2" /> Recipe Title
-                      </span>
-                    }
-                  >
-                    <Form.Control
-                      type="text"
-                      name="title"
-                      placeholder="e.g. Creamy Garlic Pasta"
-                      value={recipe.title}
-                      onChange={handleChange}
-                      required
-                    />
-                  </FloatingLabel>
-                </Form.Group>
+              <Form onSubmit={handleSubmit} id="recipe-form">
+                {/* Basic Information */}
+                <Row className="mb-4">
+                  <Col md={12}>
+                    <FloatingLabel label="Recipe Title" className="mb-3">
+                      <Form.Control
+                        type="text"
+                        name="title"
+                        id="title"
+                        value={recipe.title}
+                        onChange={handleChange}
+                        placeholder="e.g. Creamy Garlic Pasta"
+                        required
+                      />
+                    </FloatingLabel>
+                  </Col>
+                </Row>
 
                 <Row>
-                  {/* Left Column - Image, Time, Category, Rating */}
+                  {/* Left Column - Image, Servings, Time, Category */}
                   <Col md={5}>
                     {/* Recipe Image */}
                     <Form.Group className="mb-4">
@@ -144,10 +193,10 @@ const AddRecipe = () => {
                         <FaImage className="me-2" /> Recipe Image
                       </Form.Label>
                       <div className="image-upload-container">
-                        {recipe.imagePreview ? (
+                        {imagePreview ? (
                           <div className="image-preview">
                             <img
-                              src={recipe.imagePreview}
+                              src={imagePreview}
                               alt="Recipe preview"
                               className="img-fluid rounded"
                             />
@@ -155,15 +204,12 @@ const AddRecipe = () => {
                               variant="outline-danger"
                               size="sm"
                               className="mt-2"
-                              onClick={() =>
-                                setRecipe({
-                                  ...recipe,
-                                  image: null,
-                                  imagePreview: null,
-                                })
-                              }
+                              onClick={() => {
+                                setImagePreview(null);
+                                setRecipe({ ...recipe, img: "" });
+                              }}
                             >
-                              Change Image
+                              Remove Image
                             </Button>
                           </div>
                         ) : (
@@ -172,6 +218,7 @@ const AddRecipe = () => {
                             <p className="text-muted">Upload your dish photo</p>
                             <Form.Control
                               type="file"
+                              name="img"
                               accept="image/*"
                               onChange={handleImageChange}
                               className="d-none"
@@ -182,53 +229,60 @@ const AddRecipe = () => {
                               htmlFor="recipeImage"
                               variant="outline-primary"
                             >
-                              Browse Files
+                              Select Image
                             </Button>
                           </div>
                         )}
                       </div>
                     </Form.Group>
 
+                    {/* Servings */}
+                    <Form.Group className="mb-4">
+                      <FloatingLabel label="Servings">
+                        <Form.Control
+                          type="number"
+                          name="servings"
+                          id="servings"
+                          min="1"
+                          value={recipe.servings}
+                          onChange={handleNumberChange}
+                          required
+                        />
+                      </FloatingLabel>
+                    </Form.Group>
+
                     {/* Preparation Time */}
                     <Form.Group className="mb-4">
-                      <Form.Label className="d-flex align-items-center mb-2">
-                        <FaClock className="me-2" /> Total Time Required
-                      </Form.Label>
-                      <InputGroup>
-                        <InputGroup.Text>
-                          <FaClock />
-                        </InputGroup.Text>
+                      <FloatingLabel label="Preparation Time (minutes)">
                         <Form.Control
-                          type="text"
+                          type="number"
                           name="time"
-                          placeholder="e.g. 30 mins, 1 hour 15 mins"
+                          id="time"
+                          min="1"
                           value={recipe.time}
-                          onChange={handleChange}
+                          onChange={handleNumberChange}
                         />
-                      </InputGroup>
-                      <Form.Text className="text-muted">
-                        Include preparation + cooking time
-                      </Form.Text>
+                      </FloatingLabel>
                     </Form.Group>
 
                     {/* Category */}
                     <Form.Group className="mb-4">
-                      <Form.Label className="d-flex align-items-center mb-2">
-                        <FaUtensils className="me-2" /> Meal Category
-                      </Form.Label>
-                      <Form.Select
-                        name="category"
-                        value={recipe.category}
-                        onChange={handleChange}
-                        className="form-select-lg"
-                      >
-                        <option value="">Select meal category</option>
-                        {categories.map((cat, index) => (
-                          <option key={index} value={cat}>
-                            {cat}
-                          </option>
-                        ))}
-                      </Form.Select>
+                      <FloatingLabel label="Category">
+                        <Form.Select
+                          name="category"
+                          id="category"
+                          value={recipe.category}
+                          onChange={handleChange}
+                          required
+                        >
+                          <option value="">Select a category</option>
+                          {categories.map((category, index) => (
+                            <option key={index} value={category}>
+                              {category}
+                            </option>
+                          ))}
+                        </Form.Select>
+                      </FloatingLabel>
                     </Form.Group>
 
                     {/* Rating */}
@@ -269,18 +323,30 @@ const AddRecipe = () => {
                   <Col md={7}>
                     {/* Ingredients */}
                     <Form.Group className="mb-4">
-                      <Form.Label className="d-flex align-items-center mb-3">
-                        <FaListUl className="me-2" /> Ingredients List
+                      <Form.Label className="d-flex align-items-center justify-content-between mb-3">
+                        <span>
+                          <FaListUl className="me-2" /> Ingredients
+                        </span>
+                        <Button
+                          variant="outline-success"
+                          size="sm"
+                          onClick={addIngredient}
+                        >
+                          <FaPlus className="me-1" /> Add
+                        </Button>
                       </Form.Label>
                       {recipe.ingredients.map((ingredient, index) => (
                         <div key={index} className="d-flex mb-2">
                           <Form.Control
                             type="text"
+                            name="ingredients"
+                            id="ingredients"
                             value={ingredient}
                             onChange={(e) =>
                               handleIngredientChange(index, e.target.value)
                             }
-                            placeholder={`e.g. 2 cups flour, 1 tbsp sugar`}
+                            placeholder={`Ingredient ${index + 1}`}
+                            required
                           />
                           {recipe.ingredients.length > 1 && (
                             <Button
@@ -288,25 +354,26 @@ const AddRecipe = () => {
                               className="ms-2"
                               onClick={() => removeIngredient(index)}
                             >
-                              ×
+                              <FaTrash />
                             </Button>
                           )}
                         </div>
                       ))}
-                      <Button
-                        variant="outline-primary"
-                        size="sm"
-                        className="mt-2"
-                        onClick={addIngredient}
-                      >
-                        <FaPlusCircle className="me-1" /> Add Another Ingredient
-                      </Button>
                     </Form.Group>
 
                     {/* Instructions */}
                     <Form.Group className="mb-4">
-                      <Form.Label className="d-flex align-items-center mb-3">
-                        <FaBookOpen className="me-2" /> Cooking Instructions
+                      <Form.Label className="d-flex align-items-center justify-content-between mb-3">
+                        <span>
+                          <FaBookOpen className="me-2" /> Instructions
+                        </span>
+                        <Button
+                          variant="outline-success"
+                          size="sm"
+                          onClick={addInstruction}
+                        >
+                          <FaPlus className="me-1" /> Add Step
+                        </Button>
                       </Form.Label>
                       {recipe.instructions.map((instruction, index) => (
                         <div key={index} className="mb-3">
@@ -316,14 +383,15 @@ const AddRecipe = () => {
                             </span>
                             <Form.Control
                               as="textarea"
+                              name="instructions"
+                              id="instructions"
                               rows={3}
                               value={instruction}
                               onChange={(e) =>
                                 handleInstructionChange(index, e.target.value)
                               }
-                              placeholder={`Describe step ${
-                                index + 1
-                              } in detail`}
+                              placeholder={`Describe step ${index + 1}`}
+                              required
                             />
                             {recipe.instructions.length > 1 && (
                               <Button
@@ -331,20 +399,27 @@ const AddRecipe = () => {
                                 className="ms-2"
                                 onClick={() => removeInstruction(index)}
                               >
-                                ×
+                                <FaTrash />
                               </Button>
                             )}
                           </div>
                         </div>
                       ))}
-                      <Button
-                        variant="outline-primary"
-                        size="sm"
-                        className="mt-2"
-                        onClick={addInstruction}
-                      >
-                        <FaPlusCircle className="me-1" /> Add Another Step
-                      </Button>
+                    </Form.Group>
+
+                    {/* Notes */}
+                    <Form.Group className="mb-4">
+                      <FloatingLabel label="Additional Notes (Optional)">
+                        <Form.Control
+                          as="textarea"
+                          name="notes"
+                          id="notes"
+                          value={recipe.notes}
+                          onChange={handleChange}
+                          style={{ height: "100px" }}
+                          placeholder="Any special tips or variations..."
+                        />
+                      </FloatingLabel>
                     </Form.Group>
                   </Col>
                 </Row>

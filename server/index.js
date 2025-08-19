@@ -13,6 +13,7 @@ connectDB();
 app.use(process.env.VERSION, Router);
 
 app.use(errorMiddleware);
+app.use(express.static("public"));
 app.listen(PORT, () => {
   console.log(`App is running at port ${PORT}`);
 });

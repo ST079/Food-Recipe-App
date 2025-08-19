@@ -28,7 +28,7 @@ const seedDB = async () => {
     await Recipe.deleteMany({});
     for(let i = 0; i < 16; i++) {
       const recipe = recipes[i];
-      recipe.author = userA?._id; // Assigning the author to the recipe
+      recipe.author = userA?.username; // Assigning the author to the recipe
       await Recipe.create(recipe);
     } 
     console.log("✅ 16 recipes inserted successfully!");

@@ -136,7 +136,7 @@ const AllRecipes = ({recipes,setRecipes}) => {
                 </div>
                 <Card.Img
                   variant="top"
-                  src={recipe.img}
+                  src={`http://localhost:3000${recipe.img}`}
                   className="recipe-image"
                 />
                 <Card.Body>
@@ -167,7 +167,7 @@ const AllRecipes = ({recipes,setRecipes}) => {
                   </Button>
 
                   <Card.Text className="mt-2 text-muted">
-                    {recipe.author?.username || "Unknown Author"}
+                    {recipe.author || "Unknown Author"}
                   </Card.Text>
                 </Card.Footer>
               </Card>

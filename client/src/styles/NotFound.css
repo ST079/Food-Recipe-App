@@ -1,0 +1,262 @@
+/* 404 Page Styles */
+.not-found-container {
+  background-color: #f8f9fa;
+  color: #343a40;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.error-content {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.error-code {
+  font-size: 8rem;
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 1rem;
+  color: #0d6efd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.error-icon {
+  font-size: 6rem;
+  margin: 0 0.5rem;
+  color: #fd7e14;
+  animation: bounce 2s infinite;
+}
+
+.error-title {
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #212529;
+}
+
+.error-message {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: #6c757d;
+  margin-bottom: 2rem;
+}
+
+.error-actions .btn {
+  padding: 0.75rem 1.5rem;
+  font-size: 1.1rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.error-actions .btn-primary {
+  background-color: #0d6efd;
+  border: none;
+}
+
+.error-actions .btn-primary:hover {
+  background-color: #0b5ed7;
+  transform: translateY(-2px);
+}
+
+.error-actions .btn-outline-primary:hover {
+  transform: translateY(-2px);
+}
+
+/* Animated Plate Illustration */
+.error-image {
+  position: relative;
+  height: 300px;
+  margin: 0 auto;
+  max-width: 400px;
+}
+
+.chef-hat {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+}
+
+.hat-top {
+  width: 150px;
+  height: 100px;
+  background-color: white;
+  border-radius: 50% 50% 0 0;
+  position: relative;
+}
+
+.hat-brim {
+  width: 200px;
+  height: 20px;
+  background-color: white;
+  border-radius: 50%;
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.plate {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 250px;
+  height: 250px;
+}
+
+.plate-bottom {
+  width: 100%;
+  height: 100%;
+  background-color: #e9ecef;
+  border-radius: 50%;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.food {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  height: 80%;
+}
+
+.noodle {
+  position: absolute;
+  width: 100%;
+  height: 8px;
+  background-color: #f8d486;
+  border-radius: 4px;
+  animation: wiggle 3s infinite;
+}
+
+.noodle:nth-child(1) {
+  top: 30%;
+  transform: rotate(10deg);
+  animation-delay: 0.1s;
+}
+
+.noodle:nth-child(2) {
+  top: 50%;
+  transform: rotate(-5deg);
+  animation-delay: 0.3s;
+}
+
+.noodle:nth-child(3) {
+  top: 70%;
+  transform: rotate(15deg);
+  animation-delay: 0.2s;
+}
+
+.vegetable {
+  position: absolute;
+  border-radius: 50%;
+}
+
+.carrot {
+  width: 30px;
+  height: 40px;
+  background-color: #fd7e14;
+  top: 40%;
+  left: 20%;
+  transform: rotate(-30deg);
+}
+
+.broccoli {
+  width: 35px;
+  height: 35px;
+  background-color: #40c057;
+  top: 60%;
+  right: 20%;
+}
+
+.search-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80px;
+  height: 80px;
+  background-color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  color: #0d6efd;
+  animation: pulse 2s infinite;
+  z-index: 20;
+}
+
+/* Animations */
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes wiggle {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(2deg);
+  }
+  75% {
+    transform: rotate(-2deg);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 767.98px) {
+  .error-code {
+    font-size: 6rem;
+  }
+  
+  .error-icon {
+    font-size: 4rem;
+  }
+  
+  .error-title {
+    font-size: 2rem;
+  }
+  
+  .error-message {
+    font-size: 1rem;
+  }
+  
+  .error-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .error-actions .btn {
+    width: 100%;
+    margin-right: 0 !important;
+  }
+  
+  .error-image {
+    height: 250px;
+    margin-top: 3rem;
+  }
+}

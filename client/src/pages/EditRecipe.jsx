@@ -1,74 +1,47 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Container,
+  Form,
+  Button,
   Row,
   Col,
   Card,
-  Button,
-  Form,
-  InputGroup,
   FloatingLabel,
-  ListGroup,
-  Accordion,
-  Badge,
 } from "react-bootstrap";
 import {
-  FaClock,
-  FaStar,
-  FaUtensils,
   FaListUl,
   FaBookOpen,
-  FaRegClock,
-  FaUserFriends,
-  FaTrash,
+  FaStar,
+  FaImage,
   FaPlus,
-  FaArrowLeft,
+  FaTrash,
   FaSave,
+  FaArrowLeft,
 } from "react-icons/fa";
 import { PiChefHat } from "react-icons/pi";
 import { useParams, useNavigate } from "react-router-dom";
 import "../styles/EditRecipe.css";
+import axios from "axios";
 
 const EditRecipe = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [error, setError] = useState(null);
 
   // Sample recipe data - in a real app, you'd fetch this based on the ID
   const [recipe, setRecipe] = useState({
-    id: 1,
-    title: "Creamy Garlic Pasta",
-    image:
-      "https://images.unsplash.com/photo-1555949258-eb67b1ef0ceb?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80",
-    time: "25 mins",
-    servings: "2-3",
-    category: "Dinner",
-    rating: 4,
-    author: "Chef Maria",
-    date: "May 15, 2023",
-    description:
-      "A delicious creamy garlic pasta that comes together in just 25 minutes. Perfect for a quick weeknight dinner that feels special enough for company.",
-    ingredients: [
-      "8 oz fettuccine pasta",
-      "3 tbsp unsalted butter",
-      "4 garlic cloves, minced",
-      "1 cup heavy cream",
-      "1/2 cup grated parmesan cheese",
-      "1/4 tsp salt",
-      "1/4 tsp black pepper",
-      "2 tbsp chopped fresh parsley",
-    ],
-    instructions: [
-      "Cook pasta according to package instructions in salted water. Reserve 1/2 cup pasta water before draining.",
-      "In a large skillet, melt butter over medium heat. Add garlic and sauté for 1 minute until fragrant.",
-      "Pour in heavy cream and bring to a simmer. Cook for 3-4 minutes until slightly thickened.",
-      "Stir in parmesan cheese until melted and smooth. Season with salt and pepper.",
-      "Add drained pasta to the sauce, tossing to coat. Add reserved pasta water as needed to reach desired consistency.",
-      "Garnish with chopped parsley and serve immediately.",
-    ],
-    notes:
-      "For extra protein, add cooked chicken or shrimp. The sauce thickens as it cools, so serve immediately.",
+    title: "",
+    ingredients: [""],
+    instructions: [""],
+    servings: 1,
+    time: 0,
+    category: "",
+    rating: 0,
+    img: "",
+    notes: "",
   });
 
+  const [imagePreview, setImagePreview] = useState(recipe.img);
   const categories = [
     "Breakfast",
     "Lunch",
@@ -78,9 +51,29 @@ const EditRecipe = () => {
     "Snack",
   ];
 
+  useEffect(() => {
+    const fetchRecipe = async () => {
+      const result = await axios.get(
+        `http://localhost:3000/api/v1/recipe/${id}`
+      );
+      if (!result) {
+        setError("Recipe not found");
+        return;
+      }
+      setRecipe(result.data.data);
+    };
+
+    fetchRecipe();
+  }, [id]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setRecipe({ ...recipe, [name]: value });
+  };
+
+  const handleNumberChange = (e) => {
+    const { name, value } = e.target;
+    setRecipe({ ...recipe, [name]: parseInt(value) || 0 });
   };
 
   const handleIngredientChange = (index, value) => {
@@ -116,25 +109,58 @@ const EditRecipe = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setRecipe({
-          ...recipe,
-          image: reader.result,
-        });
-      };
-      reader.readAsDataURL(file);
+      setRecipe({ ...recipe, img: file }); // store file in state
+      setImagePreview(URL.createObjectURL(file)); // show preview
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Recipe updated:", recipe);
-    navigate(`/recipe/${recipe.id}`);
+
+    try {
+      const formData = new FormData();
+
+      // Append simple fields
+      formData.append("title", recipe.title);
+      formData.append("author", localStorage.getItem("user") || "Anonymous");
+      formData.append("servings", recipe.servings.toString());
+      formData.append("time", recipe.time.toString());
+      formData.append("category", recipe.category);
+      formData.append("rating", recipe.rating.toString());
+      if (recipe.notes) formData.append("notes", recipe.notes);
+
+      // Append arrays properly
+      recipe.ingredients.forEach((ingredient, index) => {
+        formData.append(`ingredients[${index}]`, ingredient);
+      });
+
+      recipe.instructions.forEach((instruction, index) => {
+        formData.append(`instructions[${index}]`, instruction);
+      });
+
+      // Append image if it exists
+      if (recipe.img instanceof File) {
+        formData.append("img", recipe.img);
+      }
+      for (let [key, value] of formData.entries()) {
+        console.log(key, value);
+      }
+
+      await axios.put(`http://localhost:3000/api/v1/recipe/${id}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      console.log("Updated recipe");
+      navigate(`/recipe/${id}`);
+
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
   return (
-    <Container className="edit-recipe-container py-4">
+    <Container className="edit-recipe-container py-5">
       <Button
         variant="outline-secondary"
         onClick={() => navigate(-1)}
@@ -144,229 +170,268 @@ const EditRecipe = () => {
       </Button>
 
       <Card className="edit-recipe-card shadow-sm">
-        {/* Recipe Header */}
-        <div className="recipe-header">
-          <div className="recipe-image-container">
-            <img
-              src={recipe.image}
-              alt={recipe.title}
-              className="recipe-main-image"
-            />
-            <div className="image-upload-overlay">
-              <Form.Control
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="d-none"
-                id="recipeImageUpload"
-              />
-              <Button
-                as="label"
-                htmlFor="recipeImageUpload"
-                variant="outline-light"
-                className="change-image-btn"
-              >
-                Change Image
-              </Button>
-            </div>
-            <div className="recipe-badges">
-              <Badge bg="primary" className="me-2">
-                <FaUtensils className="me-1" /> {recipe.category}
-              </Badge>
-              <Badge bg="success">
-                <FaRegClock className="me-1" /> {recipe.time}
-              </Badge>
-            </div>
+        <Card.Header className="recipe-card-header">
+          <div className="d-flex align-items-center">
+            <PiChefHat size={28} className="me-3" />
+            <h2 className="display-4 mb-0">Edit Recipe</h2>
           </div>
-
-          <div className="recipe-title-section">
-            <Form.Group className="mb-3">
-              <Form.Control
-                type="text"
-                name="title"
-                value={recipe.title}
-                onChange={handleChange}
-                className="recipe-title-input"
-              />
-            </Form.Group>
-            <div className="recipe-meta">
-              <InputGroup className="mb-2 me-3" style={{ width: "120px" }}>
-                <InputGroup.Text>
-                  <FaStar />
-                </InputGroup.Text>
-                <Form.Select
-                  name="rating"
-                  value={recipe.rating}
-                  onChange={handleChange}
-                >
-                  {[1, 2, 3, 4, 5].map((num) => (
-                    <option key={num} value={num}>
-                      {num}
-                    </option>
-                  ))}
-                </Form.Select>
-              </InputGroup>
-
-              <InputGroup className="mb-2" style={{ width: "150px" }}>
-                <InputGroup.Text>
-                  <FaUserFriends />
-                </InputGroup.Text>
-                <Form.Control
-                  type="text"
-                  name="servings"
-                  value={recipe.servings}
-                  onChange={handleChange}
-                  placeholder="Servings"
-                />
-              </InputGroup>
-            </div>
-          </div>
-        </div>
-
+        </Card.Header>
         <Card.Body>
-          {/* Recipe Description */}
-          <Row className="mb-4">
-            <Col>
-              <FloatingLabel label="Recipe Description">
-                <Form.Control
-                  as="textarea"
-                  name="description"
-                  value={recipe.description}
-                  onChange={handleChange}
-                  style={{ height: "100px" }}
-                />
-              </FloatingLabel>
-            </Col>
-          </Row>
+          <Form onSubmit={handleSubmit}>
+            {/* Basic Information */}
+            <Row className="mb-4">
+              <Col>
+                <FloatingLabel label="Recipe Title*" className="mb-3">
+                  <Form.Control
+                    type="text"
+                    name="title"
+                    value={recipe.title}
+                    onChange={handleChange}
+                    placeholder="e.g. Creamy Garlic Pasta"
+                    required
+                  />
+                </FloatingLabel>
+              </Col>
+            </Row>
 
-          <Row>
-            {/* Left Column - Ingredients */}
-            <Col lg={4} className="mb-4 mb-lg-0">
-              <Card className="ingredients-card">
-                <Card.Header className="d-flex align-items-center justify-content-between">
-                  <span>
-                    <FaListUl className="me-2" /> Ingredients
-                  </span>
-                  <Button
-                    variant="outline-success"
-                    size="sm"
-                    onClick={addIngredient}
-                  >
-                    <FaPlus />
-                  </Button>
-                </Card.Header>
-                <ListGroup variant="flush">
-                  {recipe.ingredients.map((ingredient, index) => (
-                    <ListGroup.Item
-                      key={index}
-                      className="d-flex align-items-start"
-                    >
-                      <Button
-                        variant="outline-danger"
-                        size="sm"
-                        className="me-2"
-                        onClick={() => removeIngredient(index)}
-                        disabled={recipe.ingredients.length <= 1}
-                      >
-                        <FaTrash size={12} />
-                      </Button>
-                      <Form.Control
-                        type="text"
-                        value={ingredient}
-                        onChange={(e) =>
-                          handleIngredientChange(index, e.target.value)
-                        }
-                        placeholder={`Ingredient ${index + 1}`}
-                      />
-                    </ListGroup.Item>
-                  ))}
-                </ListGroup>
-              </Card>
-            </Col>
-
-            {/* Right Column - Instructions */}
-            <Col lg={8}>
-              <Card className="instructions-card">
-                <Card.Header className="d-flex align-items-center justify-content-between">
-                  <span>
-                    <FaBookOpen className="me-2" /> Instructions
-                  </span>
-                  <Button
-                    variant="outline-success"
-                    size="sm"
-                    onClick={addInstruction}
-                  >
-                    <FaPlus />
-                  </Button>
-                </Card.Header>
-                <ListGroup variant="flush">
-                  {recipe.instructions.map((instruction, index) => (
-                    <ListGroup.Item key={index} className="d-flex mb-2">
-                      <div className="step-number me-3">{index + 1}</div>
-                      <div className="flex-grow-1">
-                        <Form.Control
-                          as="textarea"
-                          rows={3}
-                          value={instruction}
-                          onChange={(e) =>
-                            handleInstructionChange(index, e.target.value)
-                          }
-                          placeholder={`Step ${index + 1}`}
+            <Row>
+              {/* Left Column - Image, Servings, Time, Category */}
+              <Col md={5}>
+                {/* Recipe Image */}
+                <Form.Group className="mb-4">
+                  <Form.Label className="d-flex align-items-center mb-3">
+                    <FaImage className="me-2" /> Recipe Image
+                  </Form.Label>
+                  <div className="image-upload-container">
+                    {imagePreview ? (
+                      <div className="image-preview">
+                        <img
+                          src={imagePreview}
+                          alt="Recipe preview"
+                          className="img-fluid rounded"
                         />
                         <Button
                           variant="outline-danger"
                           size="sm"
                           className="mt-2"
-                          onClick={() => removeInstruction(index)}
-                          disabled={recipe.instructions.length <= 1}
+                          onClick={() => {
+                            setImagePreview(null);
+                            setRecipe({ ...recipe, img: "" });
+                          }}
                         >
-                          <FaTrash className="me-1" /> Remove Step
+                          Remove Image
                         </Button>
                       </div>
-                    </ListGroup.Item>
-                  ))}
-                </ListGroup>
-              </Card>
+                    ) : (
+                      <div className="image-upload-placeholder">
+                        <FaImage size={48} className="mb-3 text-muted" />
+                        <p className="text-muted">Upload your dish photo</p>
+                        <Form.Control
+                          type="file"
+                          name="img"
+                          accept="image/*"
+                          onChange={handleImageChange}
+                          className="d-none"
+                          id="recipeImage"
+                        />
+                        <Button
+                          as="label"
+                          htmlFor="recipeImage"
+                          variant="outline-primary"
+                        >
+                          Select Image
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                </Form.Group>
 
-              {/* Recipe Notes */}
-              <Accordion className="mt-4">
-                <Accordion.Item eventKey="0">
-                  <Accordion.Header>
-                    <PiChefHat className="me-2" /> Chef's Notes
-                  </Accordion.Header>
-                  <Accordion.Body>
-                    <FloatingLabel label="Additional notes or tips">
-                      <Form.Control
-                        as="textarea"
-                        name="notes"
-                        value={recipe.notes}
-                        onChange={(e) =>
-                          setRecipe({ ...recipe, notes: e.target.value })
-                        }
-                        style={{ height: "100px" }}
+                {/* Servings */}
+                <Form.Group className="mb-4">
+                  <FloatingLabel label="Servings*">
+                    <Form.Control
+                      type="number"
+                      name="servings"
+                      min="1"
+                      value={recipe.servings}
+                      onChange={handleNumberChange}
+                      required
+                    />
+                  </FloatingLabel>
+                </Form.Group>
+
+                {/* Preparation Time */}
+                <Form.Group className="mb-4">
+                  <FloatingLabel label="Preparation Time (minutes)">
+                    <Form.Control
+                      type="number"
+                      name="time"
+                      min="1"
+                      value={recipe.time}
+                      onChange={handleNumberChange}
+                    />
+                  </FloatingLabel>
+                </Form.Group>
+
+                {/* Category */}
+                <Form.Group className="mb-4">
+                  <FloatingLabel label="Category*">
+                    <Form.Select
+                      name="category"
+                      value={recipe.category}
+                      onChange={handleChange}
+                      required
+                    >
+                      <option value="">Select a category</option>
+                      {categories.map((category, index) => (
+                        <option key={index} value={category}>
+                          {category}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  </FloatingLabel>
+                </Form.Group>
+
+                {/* Rating */}
+                <Form.Group className="mb-4">
+                  <Form.Label className="d-flex align-items-center mb-2">
+                    <FaStar className="me-2" /> Rating (0-5)
+                  </Form.Label>
+                  <div className="d-flex align-items-center">
+                    {[0, 1, 2, 3, 4, 5].map((star) => (
+                      <Form.Check
+                        key={star}
+                        type="radio"
+                        id={`rating-${star}`}
+                        name="rating"
+                        label={star}
+                        value={star}
+                        checked={recipe.rating === star}
+                        onChange={() => setRecipe({ ...recipe, rating: star })}
+                        inline
+                        className="me-2"
                       />
-                    </FloatingLabel>
-                  </Accordion.Body>
-                </Accordion.Item>
-              </Accordion>
-            </Col>
-          </Row>
-        </Card.Body>
+                    ))}
+                  </div>
+                </Form.Group>
+              </Col>
 
-        {/* Footer Actions */}
-        <Card.Footer className="edit-actions">
-          <div className="d-flex justify-content-between">
-            <Button
-              variant="outline-danger"
-              onClick={() => navigate(`/recipes/${recipe.id}`)}
-            >
-              Cancel
-            </Button>
-            <Button variant="primary" onClick={handleSubmit}>
-              <FaSave className="me-2" /> Save Changes
-            </Button>
-          </div>
-        </Card.Footer>
+              {/* Right Column - Ingredients and Instructions */}
+              <Col md={7}>
+                {/* Ingredients */}
+                <Form.Group className="mb-4">
+                  <Form.Label className="d-flex align-items-center justify-content-between mb-3">
+                    <span>
+                      <FaListUl className="me-2" /> Ingredients*
+                    </span>
+                    <Button
+                      variant="outline-success"
+                      size="sm"
+                      onClick={addIngredient}
+                    >
+                      <FaPlus className="me-1" /> Add
+                    </Button>
+                  </Form.Label>
+                  {recipe.ingredients.map((ingredient, index) => (
+                    <div key={index} className="d-flex mb-2">
+                      <Form.Control
+                        type="text"
+                        name="ingredients"
+                        value={ingredient}
+                        onChange={(e) =>
+                          handleIngredientChange(index, e.target.value)
+                        }
+                        placeholder={`Ingredient ${index + 1}`}
+                        required
+                      />
+                      {recipe.ingredients.length > 1 && (
+                        <Button
+                          variant="outline-danger"
+                          className="ms-2"
+                          onClick={() => removeIngredient(index)}
+                        >
+                          <FaTrash />
+                        </Button>
+                      )}
+                    </div>
+                  ))}
+                </Form.Group>
+
+                {/* Instructions */}
+                <Form.Group className="mb-4">
+                  <Form.Label className="d-flex align-items-center justify-content-between mb-3">
+                    <span>
+                      <FaBookOpen className="me-2" /> Instructions
+                    </span>
+                    <Button
+                      variant="outline-success"
+                      size="sm"
+                      onClick={addInstruction}
+                    >
+                      <FaPlus className="me-1" /> Add Step
+                    </Button>
+                  </Form.Label>
+                  {recipe.instructions.map((instruction, index) => (
+                    <div key={index} className="mb-3">
+                      <div className="d-flex align-items-start mb-1">
+                        <span className="step-number me-2 mt-1">
+                          {index + 1}.
+                        </span>
+                        <Form.Control
+                          type="textarea"
+                          name="instructions"
+                          rows={3}
+                          value={instruction}
+                          onChange={(e) =>
+                            handleInstructionChange(index, e.target.value)
+                          }
+                          placeholder={`Describe step ${index + 1}`}
+                          required
+                        />
+                        {recipe.instructions.length > 1 && (
+                          <Button
+                            variant="outline-danger"
+                            className="ms-2"
+                            onClick={() => removeInstruction(index)}
+                          >
+                            <FaTrash />
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </Form.Group>
+
+                {/* Notes */}
+                <Form.Group className="mb-4">
+                  <FloatingLabel label="Additional Notes (Optional)">
+                    <Form.Control
+                      type="textarea"
+                      name="notes"
+                      value={recipe.notes}
+                      onChange={handleChange}
+                      style={{ height: "100px" }}
+                      placeholder="Any special tips or variations..."
+                    />
+                  </FloatingLabel>
+                </Form.Group>
+              </Col>
+            </Row>
+
+            {/* Submit Button */}
+            <div className="d-flex justify-content-between mt-4">
+              <Button
+                variant="outline-danger"
+                onClick={() => navigate(`/recipe/${id}`)}
+              >
+                Cancel
+              </Button>
+              <Button variant="primary" type="submit">
+                <FaSave className="me-2" /> Save Changes
+              </Button>
+            </div>
+          </Form>
+        </Card.Body>
       </Card>
     </Container>
   );
