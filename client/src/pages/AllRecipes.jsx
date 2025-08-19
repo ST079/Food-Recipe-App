@@ -24,15 +24,14 @@ import { Link } from "react-router-dom";
 import "../styles/Recipes.css";
 import axios from "axios";
 import { useEffect } from "react";
+import RecipeNotification from "../components/RecipeNotification";
 
-const AllRecipes = ({recipes,setRecipes}) => {
-
- 
-
+const AllRecipes = ({ recipes, setRecipes }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [activePage, setActivePage] = useState(1);
   const recipesPerPage = 8;
+  const [showSuccessNotification, setShowSuccessNotification] = useState("");
 
   // Get unique categories
   const categories = [
@@ -41,14 +40,22 @@ const AllRecipes = ({recipes,setRecipes}) => {
   ];
 
   // Toggle favorite status
-  const toggleFavorite = (id) => {
+
+  const toggleFavorite = async (id) => {
     setRecipes(
       recipes.map((recipe) =>
-        recipe._id === id
+        recipe.id === id
           ? { ...recipe, isFavorite: !recipe.isFavorite }
           : recipe
       )
     );
+
+    try {
+      await axios.patch(`http://localhost:3000/api/v1/recipe/${id}/favourite`);
+      setShowSuccessNotification(true);
+    } catch (error) {
+      console.error("Error toggling favorite:", error);
+    }
   };
 
   // Filter recipes based on search and category
@@ -128,7 +135,7 @@ const AllRecipes = ({recipes,setRecipes}) => {
                   className="favorite-icon"
                   onClick={() => toggleFavorite(recipe._id)}
                 >
-                  {recipe.isFavorite ? (
+                  {recipe.isFavorite === true ? (
                     <FaHeart className="text-danger" />
                   ) : (
                     <FaRegHeart className="text-muted" />
@@ -136,7 +143,11 @@ const AllRecipes = ({recipes,setRecipes}) => {
                 </div>
                 <Card.Img
                   variant="top"
-                  src={`http://localhost:3000${recipe.img}`}
+                  src={
+                    recipe.img.startsWith("http")
+                      ? recipe.img
+                      : `http://localhost:3000${recipe.img}`
+                  }
                   className="recipe-image"
                 />
                 <Card.Body>
@@ -207,6 +218,13 @@ const AllRecipes = ({recipes,setRecipes}) => {
           </Col>
         </Row>
       )}
+      <RecipeNotification
+        type="Success"
+        message={`Added to favorites successfully`}
+        show={showSuccessNotification}
+        onClose={() => setShowSuccessNotification(false)}
+        autoCloseDuration={4000} // Optional: customize auto-close time
+      />
     </Container>
   );
 };

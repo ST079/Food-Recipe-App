@@ -23,8 +23,11 @@ import { PiChefHat } from "react-icons/pi";
 import { BiSolidBookAdd } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import "../styles/MyRecipes.css";
+import axios from "axios";
+import RecipeNotification from "../components/RecipeNotification";
 
 const MyRecipes = ({ recipes, setRecipes }) => {
+   const[showDeleteNotification, setShowDeleteNotification] = useState("");
   const MyRecipes = recipes.filter(
     (recipe) => recipe.author === localStorage.getItem("user")
   );
@@ -49,8 +52,10 @@ const MyRecipes = ({ recipes, setRecipes }) => {
     return matchesSearch && matchesCategory;
   });
 
-  const deleteRecipe = (id) => {
+  const deleteRecipe = async (id) => {
+    await axios.delete(`http://localhost:3000/api/v1/recipe/${id}`);
     setRecipes(recipes.filter((recipe) => recipe._id !== id));
+    setShowDeleteNotification(true);
   };
 
   return (
@@ -118,7 +123,11 @@ const MyRecipes = ({ recipes, setRecipes }) => {
                         <div className="recipe-image-container">
                           <Card.Img
                             variant="top"
-                            src={`http://localhost:3000${recipe.img}`}
+                            src={
+                              recipe.img.startsWith("http")
+                                ? recipe.img
+                                : `http://localhost:3000${recipe.img}`
+                            }
                             className="recipe-image"
                           />
                           <Badge bg="primary" className="recipe-category">
@@ -179,6 +188,13 @@ const MyRecipes = ({ recipes, setRecipes }) => {
           </Card>
         </Col>
       </Row>
+      <RecipeNotification
+        type="delete"
+        message={`Your recipe has been permanently deleted.`}
+        show={showDeleteNotification}
+        onClose={() => setShowDeleteNotification(false)}
+        autoCloseDuration={4000} // Optional: customize auto-close time
+      />
     </Container>
   );
 };

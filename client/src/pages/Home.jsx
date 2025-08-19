@@ -7,20 +7,20 @@ import { Link, useLoaderData } from "react-router-dom";
 import { useState } from "react";
 import { useEffect } from "react";
 
-const Home = ({recipes}) => {
+const Home = ({ recipes }) => {
   // Sample recipe data
-  const [latestRecipes,setLatestRecipes] = useState([]);
-  useEffect(()=>{
-    try{
-      setLatestRecipes(recipes.slice(0, 4)); 
-    }catch(error){
+  const [latestRecipes, setLatestRecipes] = useState([]);
+  useEffect(() => {
+    try {
+      setLatestRecipes(recipes.slice(0, 4));
+    } catch (error) {
       console.error("Error fetching latest recipes:", error);
     }
-  },[recipes])
+  }, [recipes]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  },[])
+  }, []);
 
   const categories = [
     { name: "Breakfast", count: 45 },
@@ -44,8 +44,25 @@ const Home = ({recipes}) => {
                 of recipes from home cooks around the world.
               </p>
               <Link to="/recipes">
-                <Button variant="primary" size="lg" className={`mt-3 ${!localStorage.getItem("token") ? "d-none" : ""}`}>
+                <Button
+                  variant="primary"
+                  size="lg"
+                  className={`mt-3 ${
+                    !localStorage.getItem("token") ? "d-none" : ""
+                  }`}
+                >
                   Explore Recipes
+                </Button>
+              </Link>
+              <Link to="/add-recipe">
+                <Button
+                  variant="outline-primary"
+                  size="lg"
+                  className={`mt-3 mx-3 ${
+                    !localStorage.getItem("token") ? "d-none" : ""
+                  }`}
+                >
+                  Share Your Recipe
                 </Button>
               </Link>
             </Col>
@@ -72,7 +89,14 @@ const Home = ({recipes}) => {
             {latestRecipes.map((recipe) => (
               <Col key={recipe._id} md={3} sm={6} className="mb-4">
                 <Card className="h-100 recipe-card">
-                  <Card.Img variant="top" src={recipe.img} />
+                  <Card.Img
+                    variant="top"
+                    src={
+                      recipe.img.startsWith("http")
+                        ? recipe.img
+                        : `http://localhost:3000${recipe.img}`
+                    }
+                  />
                   <Card.Body>
                     <div className="d-flex justify-content-between mb-2">
                       <span className="text-muted">
@@ -91,12 +115,11 @@ const Home = ({recipes}) => {
                     </Card.Text>
                   </Card.Body>
                   <Card.Footer className="bg-white border-0">
-                    <Button variant="outline-primary" size="sm">
-                      View Recipe
-                    </Button>
-                    <Button variant="link" className="float-end">
-                      <FaHeart />
-                    </Button>
+                    <Link to={`/recipes/${recipe._id}`}>
+                      <Button variant="outline-primary" size="sm">
+                        View Recipe
+                      </Button>
+                    </Link>
                   </Card.Footer>
                 </Card>
               </Col>

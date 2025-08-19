@@ -5,12 +5,13 @@ import { GiCookingGlove } from "react-icons/gi";
 import Logo from "/logo/favicon-16x16.png";
 import "../App.css";
 import Profile from "/profile.png";
+import { useNavigate } from "react-router-dom";
 const UserNavbar = () => {
   const token = localStorage.getItem("token");
   const userName = localStorage.getItem("user") || "Chef Name";
 
   const { pathname } = useLocation();
-  const[isLoggedIn, setIsLoggedIn] = React.useState(token ? true : false);
+  const navigate = useNavigate();
   
 
  
@@ -70,7 +71,7 @@ const UserNavbar = () => {
               <li className="nav-item">
                 <Link
                   className={`nav-link ${
-                    pathname === "/favourites" ? "active" : ""
+                    pathname === "/favourites/" ? "active" : ""
                   } ${token ? "" : "disabled"}`}
                   to="/favourites"
                 >
@@ -103,9 +104,9 @@ const UserNavbar = () => {
                 <Link to="/user/login">
                   <button className="btn btn-success">Login</button>
                 </Link>
-                <Link to="/user/sign-up">
-                  <button className="btn btn-danger mx-2">Sign Up</button>
-                </Link>
+                {/* <Link to="/user/sign-up">
+                </Link> */}
+                  <button className="btn btn-danger mx-2 disabled">Sign Up</button>
               </div>
             ) : (
               ""
@@ -125,7 +126,7 @@ const UserNavbar = () => {
                   onClick={() => {
                     localStorage.removeItem("token");
                     localStorage.removeItem("user");
-                    window.location.reload();
+                    navigate("/user/login");
                   }}
                 >
                   Logout

@@ -26,9 +26,11 @@ import { PiChefHat } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
 import "../styles/AddRecipe.css";
 import axios from "axios";
+import RecipeNotification from "../components/RecipeNotification";
 import { useRef } from "react";
 
 const AddRecipe = () => {
+  const[showSuccessNotification, setShowSuccessNotification] = useState("");
   const [recipe, setRecipe] = useState({
     title: "",
     ingredients: [""],
@@ -146,7 +148,11 @@ const AddRecipe = () => {
         }
       );
       console.log("Recipe added successfully:", data);
-      navigate("/my-recipies");
+      setShowSuccessNotification(true);
+      setTimeout(() => {
+      navigate(`/recipes/${data.data._id}`);
+      }, 2000);
+
     } catch (error) {
       console.error("Error adding recipe:", {
         message: error.message,
@@ -155,14 +161,14 @@ const AddRecipe = () => {
     }
   };
   return (
-    <Container className="add-recipe-container py-5">
+    <Container className="add-recipe-container">
       <Row className="justify-content-center">
-        <Col lg={10}>
+        <Col lg={12}>
           <Card className="add-recipe-card">
             <Card.Header className="recipe-card-header">
               <div className="d-flex align-items-center">
                 <PiChefHat size={28} className="me-3" />
-                <h2 className="display-4 mb-0">Create New Recipe</h2>
+                <h2 className="display-4 mb-0">Share Your Recipe</h2>
               </div>
             </Card.Header>
             <Card.Body>
@@ -435,6 +441,13 @@ const AddRecipe = () => {
           </Card>
         </Col>
       </Row>
+      <RecipeNotification
+        type="success"
+        message={`Your recipe "${recipe.title}" has been added successfully!`}
+        show={showSuccessNotification}
+        onClose={() => setShowSuccessNotification(false)}
+      />
+      ;
     </Container>
   );
 };

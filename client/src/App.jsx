@@ -28,7 +28,7 @@ const App = () => {
       }
     };
     fetchRecipes();
-  }, []);
+  }, [recipes]);
 
   return (
     <Routes>
@@ -43,7 +43,7 @@ const App = () => {
         <Route path="/add-recipe" element={<AddRecipe />} />
         <Route path="/edit-recipe/:id" element={<EditRecipe/>} />
         <Route path="/my-recipes" element={<MyRecipes recipes={recipes} setRecipes={setRecipes} />} />
-        <Route path="/favourites" element={<Favourites recipes={recipes} />} />
+        <Route path="/favourites" element={<Favourites recipes={recipes} setRecipes={setRecipes} />} />
         <Route path="/user/sign-up" element={<Signup />} />
         <Route path="/user/login" element={<Login />} />
 

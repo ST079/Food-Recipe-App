@@ -95,4 +95,35 @@ const deleteRecipe = async (req, res, next) => {
   }
 };
 
-module.exports = { getRecipes, getRecipe, addRecipe, editRecipe, deleteRecipe };
+const favouriteRecipe = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const recipe = await Recipes.findById(id);
+    const currentUser = recipe.author;
+
+    if (!recipe) {
+      return res.status(404).json({ message: "Recipe not found" });
+    }
+
+    const isFavorite = recipe.whoseFavourite.includes(currentUser);
+
+    if (isFavorite) {
+      recipe.whoseFavourite = recipe.whoseFavourite.filter(
+        (user) => user !== currentUser
+      );
+    } else {
+      recipe.whoseFavourite.push(currentUser);
+    }
+
+    recipe.isFavorite = !isFavorite;
+
+    await recipe.save();
+
+    res.json({ data: recipe });
+
+  } catch (error) {
+    next(error);
+  }
+}
+
+module.exports = { getRecipes, getRecipe, addRecipe, editRecipe, deleteRecipe , favouriteRecipe };

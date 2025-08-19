@@ -24,8 +24,8 @@ import { useEffect } from "react";
 
 const Login = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
+  const [email, setEmail] = React.useState("admin@gmail.com");
+  const [password, setPassword] = React.useState("admin123");
   const [error, setError] = React.useState("");
 
   const handelSubmit = async (e) => {
@@ -40,6 +40,7 @@ const Login = () => {
       })
       .catch((err) => {
         setError(err.response.data.message);
+        navigate("/user/login");
       })
       .finally(() => {
         setTimeout(() => {
@@ -55,7 +56,7 @@ const Login = () => {
     if (token) {
       navigate("/");
     }
-  }, [navigate]);
+  }, [ navigate]);
 
   return (
     <Container fluid className="login-container">
@@ -109,6 +110,7 @@ const Login = () => {
                     </InputGroup.Text>
                     <Form.Control
                       type="text"
+                      value={email}
                       placeholder="Enter your email"
                       onChange={(e) => setEmail(e.target.value)}
                     />
@@ -124,6 +126,7 @@ const Login = () => {
                     </InputGroup.Text>
                     <Form.Control
                       type="password"
+                      value={password}
                       placeholder="Enter your password"
                       onChange={(e) => setPassword(e.target.value)}
                     />
@@ -155,7 +158,7 @@ const Login = () => {
                 </div>
 
                 {/* Social Login Options */}
-                <div className="text-center mt-4">
+                {/* <div className="text-center mt-4">
                   <p className="divider pt-5">or continue with</p>
                   <div className="social-login">
                     <Button variant="outline-primary" className="social-btn">
@@ -167,8 +170,8 @@ const Login = () => {
                     <Button variant="outline-primary" className="social-btn">
                       <i className="fab fa-apple"></i>
                     </Button>
-                  </div>
-                </div>
+                  </div> 
+                </div> */}
               </Form>
             </Card.Body>
           </Card>

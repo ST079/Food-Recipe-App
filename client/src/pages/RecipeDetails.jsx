@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Container,
   Row,
@@ -25,46 +25,33 @@ import {
 import { PiChefHat } from "react-icons/pi";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import "../styles/RecipeDetails.css";
+import axios from "axios";
 
 const RecipeDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [recipe, setRecipe] = React.useState({
+    title: "",
+    ingredients: [""],
+    instructions: [""],
+    servings: 1,
+    time: 0,
+    category: "",
+    rating: 0,
+    img: "",
+    notes: "",
+  });
 
-  // Sample recipe data - in a real app, you'd fetch this based on the ID
-  const recipe = {
-    id: 1,
-    title: "Creamy Garlic Pasta",
-    image:
-      "https://images.unsplash.com/photo-1555949258-eb67b1ef0ceb?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80",
-    time: "25 mins",
-    servings: "2-3",
-    category: "Dinner",
-    rating: 4.5,
-    author: "Chef Maria",
-    date: "May 15, 2023",
-    description:
-      "A delicious creamy garlic pasta that comes together in just 25 minutes. Perfect for a quick weeknight dinner that feels special enough for company.",
-    ingredients: [
-      "8 oz fettuccine pasta",
-      "3 tbsp unsalted butter",
-      "4 garlic cloves, minced",
-      "1 cup heavy cream",
-      "1/2 cup grated parmesan cheese",
-      "1/4 tsp salt",
-      "1/4 tsp black pepper",
-      "2 tbsp chopped fresh parsley",
-    ],
-    instructions: [
-      "Cook pasta according to package instructions in salted water. Reserve 1/2 cup pasta water before draining.",
-      "In a large skillet, melt butter over medium heat. Add garlic and sauté for 1 minute until fragrant.",
-      "Pour in heavy cream and bring to a simmer. Cook for 3-4 minutes until slightly thickened.",
-      "Stir in parmesan cheese until melted and smooth. Season with salt and pepper.",
-      "Add drained pasta to the sauce, tossing to coat. Add reserved pasta water as needed to reach desired consistency.",
-      "Garnish with chopped parsley and serve immediately.",
-    ],
-    notes:
-      "For extra protein, add cooked chicken or shrimp. The sauce thickens as it cools, so serve immediately.",
-  };
+  useEffect(() => {
+    const fetchRecipe = async () => {
+      const result = await axios.get(
+        `http://localhost:3000/api/v1/recipe/${id}`
+      );
+      console.log(result.data.data);
+      setRecipe(result.data.data);
+    };
+    fetchRecipe();
+  }, [id]);
 
   return (
     <Container className="recipe-details-container py-4">
@@ -81,7 +68,11 @@ const RecipeDetails = () => {
         <div className="recipe-header">
           <div className="recipe-image-container">
             <img
-              src={recipe.image}
+              src={
+                recipe.img.startsWith("http")
+                  ? recipe.img
+                  : `http://localhost:3000${recipe.img}`
+              }
               alt={recipe.title}
               className="recipe-main-image"
             />

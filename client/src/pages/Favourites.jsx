@@ -10,17 +10,38 @@ import {
 
 import { Link } from "react-router-dom";
 import "../styles/Recipes.css";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import RecipeNotification from "../components/RecipeNotification";
 
-const Favorites = ({ recipes }) => {
+const Favorites = ({ recipes, setRecipes }) => {
   // Get favorite recipes
+  const [showSuccessNotification, setShowSuccessNotification] = useState("");
   const favoriteRecipes = recipes.filter((recipe) => recipe.isFavorite);
+
+  const toggleFavorite = async (id) => {
+    setRecipes(
+      recipes.map((recipe) =>
+        recipe.id === id
+          ? { ...recipe, isFavorite: !recipe.isFavorite }
+          : recipe
+      )
+    );
+
+    try {
+      await axios.patch(`http://localhost:3000/api/v1/recipe/${id}/favourite`);
+      setShowSuccessNotification(true);
+    } catch (error) {
+      console.error("Error toggling favorite:", error);
+    }
+  };
 
   return (
     <Container className="favorites-page py-5">
       {/* Page Header */}
       <Row className="mb-4">
         <Col>
-          <h1 className="display-4 mb-3 d-flex align-items-center">
+          <h1 className="display-4 mb-3 d-flex align-items-center ">
             <FaHeart className="me-3 text-danger" /> Favorite Recipes
           </h1>
           <p className="lead text-muted">Your saved recipes for quick access</p>
@@ -33,12 +54,23 @@ const Favorites = ({ recipes }) => {
           favoriteRecipes.map((recipe) => (
             <Col key={recipe.id} lg={3} md={6}>
               <Card className="h-100 recipe-card">
-                <div className="favorite-icon">
-                  <FaHeart className="text-danger" />
+                <div
+                  className="favorite-icon"
+                  onClick={() => toggleFavorite(recipe._id)}
+                >
+                  {recipe.isFavorite === true ? (
+                    <FaHeart className="text-danger" />
+                  ) : (
+                    <FaRegHeart className="text-muted" />
+                  )}
                 </div>
                 <Card.Img
                   variant="top"
-                  src={recipe.img}
+                  src={
+                    recipe.img.startsWith("http")
+                      ? recipe.img
+                      : `http://localhost:3000${recipe.img}`
+                  }
                   className="recipe-image"
                 />
                 <Card.Body>
@@ -61,7 +93,7 @@ const Favorites = ({ recipes }) => {
                 <Card.Footer className="bg-white border-0">
                   <Button
                     as={Link}
-                    to={`/recipe/${recipe.slug}`}
+                    to={`/recipe/${recipe._id}`}
                     variant="outline-primary"
                     size="sm"
                   >

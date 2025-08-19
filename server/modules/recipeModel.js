@@ -13,6 +13,8 @@ const recipeSchema = mongoose.Schema(
     rating: { type: Number, min: 0, max: 5 },
     img: { type: String },
     notes: { type: String },
+    isFavorite: { type: Boolean, default: false },
+    whoseFavourite:{type:[String]}
   },
   { timestamps: true }
 );

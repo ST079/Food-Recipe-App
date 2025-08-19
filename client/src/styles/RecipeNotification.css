@@ -1,0 +1,70 @@
+/* Recipe Notification Styles */
+.recipe-notification {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  min-width: 300px;
+  max-width: 400px;
+  border-radius: 12px;
+  border-left: 5px solid;
+  z-index: 9999;
+  animation: slideIn 0.3s ease-out forwards;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.recipe-notification.success {
+  border-left-color: #198754;
+}
+
+.recipe-notification.danger {
+  border-left-color: #dc3545;
+}
+
+.recipe-notification.info {
+  border-left-color: #0dcaf0;
+}
+
+.notification-icon {
+  font-size: 1.5rem;
+  margin-right: 1rem;
+}
+
+.notification-icon svg {
+  vertical-align: middle;
+}
+
+.close-btn {
+  border: none;
+  background: transparent;
+  opacity: 0.7;
+  transition: all 0.2s ease;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.close-btn:hover {
+  opacity: 1;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+@keyframes slideIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 575.98px) {
+  .recipe-notification {
+    left: 20px;
+    right: 20px;
+    max-width: none;
+    bottom: 10px;
+  }
+}

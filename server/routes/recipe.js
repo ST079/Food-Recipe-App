@@ -5,6 +5,7 @@ const {
   addRecipe,
   editRecipe,
   deleteRecipe,
+  favouriteRecipe,
 } = require("../controller/recipeController");
 const router = express.Router();
 const multer = require("multer");
@@ -42,6 +43,8 @@ router.get("/:id", getRecipe); // get recipe by id
 router.post("/",upload.single("img"), addRecipe); // to add the recipe
 
 router.put("/:id",upload.single("img"), editRecipe); // to edit the recipe by id
+
+router.patch("/:id/favourite", favouriteRecipe); // to toggle favourite status
 
 router.delete("/:id", deleteRecipe); // to delet the recipe
 module.exports = router;
