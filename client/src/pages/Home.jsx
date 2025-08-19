@@ -82,7 +82,9 @@ const Home = ({ recipes }) => {
         <Container>
           <div className="section-header d-flex justify-content-between align-items-center mb-4">
             <h2 className="section-title">Latest Recipes</h2>
+            <Link to="/recipes">
             <Button variant="outline-primary">View All</Button>
+            </Link>
           </div>
 
           <Row>
