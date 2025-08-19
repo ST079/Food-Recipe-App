@@ -45,7 +45,7 @@ const RecipeDetails = () => {
   useEffect(() => {
     const fetchRecipe = async () => {
       const result = await axios.get(
-        `http://localhost:3000/api/v1/recipe/${id}`
+        `https://food-recipe-app-mern.onrender.com/api/v1/recipe/${id}`
       );
       console.log(result.data.data);
       setRecipe(result.data.data);
@@ -71,7 +71,7 @@ const RecipeDetails = () => {
               src={
                 recipe.img.startsWith("http")
                   ? recipe.img
-                  : `http://localhost:3000${recipe.img}`
+                  : `https://food-recipe-app-mern.onrender.com${recipe.img}`
               }
               alt={recipe.title}
               className="recipe-main-image"

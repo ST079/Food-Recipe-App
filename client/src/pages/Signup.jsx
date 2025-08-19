@@ -40,7 +40,7 @@ const Signup = () => {
       setError("Passwords do not match");
     }
     await axios
-      .post("http://localhost:3000/api/v1/user/signup", {
+      .post("https://food-recipe-app-mern.onrender.com/api/v1/user/signup", {
         username,
         email,
         password,

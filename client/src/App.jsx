@@ -21,7 +21,7 @@ const App = () => {
   React.useEffect(() => {
     const fetchRecipes = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/api/v1/recipe");
+        const res = await axios.get("https://food-recipe-app-mern.onrender.com/api/v1/recipe");
         setRecipes(res.data.data);
       } catch (error) {
         console.error("Error fetching recipes:", error);

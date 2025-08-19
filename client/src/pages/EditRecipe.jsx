@@ -54,7 +54,7 @@ const EditRecipe = () => {
   useEffect(() => {
     const fetchRecipe = async () => {
       const result = await axios.get(
-        `http://localhost:3000/api/v1/recipe/${id}`
+        `https://food-recipe-app-mern.onrender.com/api/v1/recipe/${id}`
       );
       if (!result) {
         setError("Recipe not found");
@@ -146,7 +146,7 @@ const EditRecipe = () => {
         console.log(key, value);
       }
 
-      await axios.put(`http://localhost:3000/api/v1/recipe/${id}`, formData, {
+      await axios.put(`https://food-recipe-app-mern.onrender.com/api/v1/recipe/${id}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -422,7 +422,7 @@ const EditRecipe = () => {
             <div className="d-flex justify-content-between mt-4">
               <Button
                 variant="outline-danger"
-                onClick={() => navigate(`/recipe/${id}`)}
+                onClick={() => navigate(`/recipes/${id}`)}
               >
                 Cancel
               </Button>

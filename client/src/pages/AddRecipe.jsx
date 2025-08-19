@@ -139,7 +139,7 @@ const AddRecipe = () => {
       }
 
       const { data } = await axios.post(
-        "http://localhost:3000/api/v1/recipe",
+        "https://food-recipe-app-mern.onrender.com/api/v1/recipe",
         formData,
         {
           headers: {
