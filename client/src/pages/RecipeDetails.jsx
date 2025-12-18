@@ -168,9 +168,9 @@ const RecipeDetails = () => {
         <Card.Footer className="recipe-actions">
           <div className="d-flex justify-content-between">
             <div>
-              <Button variant="outline-primary" className="m-2">
+              {/* <Button variant="outline-primary" className="m-2">
                 <FaHeart className="me-1" /> Save Recipe
-              </Button>
+              </Button> */}
               <Button variant="outline-secondary" className="m-2">
                 <FaShareAlt className="me-1" /> Share
               </Button>

@@ -153,7 +153,7 @@ const EditRecipe = () => {
         },
       });
       console.log("Updated recipe");
-      navigate(`/recipe/${id}`);
+      navigate(`/recipes/${id}`);
 
     } catch (error) {
       console.log(error.message);
