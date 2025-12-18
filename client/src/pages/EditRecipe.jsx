@@ -42,7 +42,15 @@ const EditRecipe = () => {
     notes: "",
   });
 
-  const [imagePreview, setImagePreview] = useState(recipe.img);
+  const [imagePreview, setImagePreview] = useState("");
+
+  useEffect(() => {
+    if (recipe?.img) {
+      setImagePreview(recipe.img);
+    }
+  }, [recipe]);
+
+  
   const categories = [
     "Breakfast",
     "Lunch",
@@ -114,7 +122,7 @@ const EditRecipe = () => {
       setImagePreview(URL.createObjectURL(file)); // show preview
     }
   };
-
+ 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -207,7 +215,11 @@ const EditRecipe = () => {
                     {imagePreview ? (
                       <div className="image-preview">
                         <img
-                          src={imagePreview}
+                          src={
+                            imagePreview.startsWith("http")
+                              ? imagePreview
+                              : `https://food-recipe-app-server.onrender.com/${imagePreview}`
+                          }
                           alt="Recipe preview"
                           className="img-fluid rounded"
                         />
