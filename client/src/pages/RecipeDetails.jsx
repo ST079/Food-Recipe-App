@@ -58,7 +58,7 @@ const RecipeDetails = () => {
     <Container className="recipe-details-container py-4">
       <Button
         variant="outline-secondary"
-        onClick={() => navigate(-1)}
+        onClick={() => navigate("/recipes")}
         className="mb-3 back-button"
       >
         <FaArrowLeft className="me-2" /> Back to Recipes

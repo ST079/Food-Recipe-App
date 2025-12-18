@@ -45,12 +45,14 @@ const EditRecipe = () => {
   const [imagePreview, setImagePreview] = useState("");
 
   useEffect(() => {
-    if (recipe?.img) {
+    if (recipe?.img && typeof recipe.img === "string") {
       setImagePreview(recipe.img);
     }
   }, [recipe]);
 
-  
+
+  console.log(imagePreview);
+
   const categories = [
     "Breakfast",
     "Lunch",
@@ -73,7 +75,7 @@ const EditRecipe = () => {
     };
 
     fetchRecipe();
-  }, [id,API_URL]);
+  }, [id, API_URL]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -122,7 +124,7 @@ const EditRecipe = () => {
       setImagePreview(URL.createObjectURL(file)); // show preview
     }
   };
- 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -216,9 +218,11 @@ const EditRecipe = () => {
                       <div className="image-preview">
                         <img
                           src={
-                            imagePreview.startsWith("http")
+                            imagePreview.startsWith("blob:")
                               ? imagePreview
-                              : `https://food-recipe-app-server.onrender.com/${imagePreview}`
+                              : imagePreview.startsWith("http")
+                                ? imagePreview
+                                : `${import.meta.env.VITE_API_URL}${imagePreview}`
                           }
                           alt="Recipe preview"
                           className="img-fluid rounded"
@@ -308,23 +312,31 @@ const EditRecipe = () => {
                 {/* Rating */}
                 <Form.Group className="mb-4">
                   <Form.Label className="d-flex align-items-center mb-2">
-                    <FaStar className="me-2" /> Rating (0-5)
+                    <FaStar className="me-2" /> Your Rating
                   </Form.Label>
                   <div className="d-flex align-items-center">
-                    {[0, 1, 2, 3, 4, 5].map((star) => (
-                      <Form.Check
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <FaStar
                         key={star}
-                        type="radio"
-                        id={`rating-${star}`}
-                        name="rating"
-                        label={star}
-                        value={star}
-                        checked={recipe.rating === star}
-                        onChange={() => setRecipe({ ...recipe, rating: star })}
-                        inline
-                        className="me-2"
+                        size={24}
+                        className="me-2 star-rating"
+                        color={
+                          star <= recipe.rating ? "#ffc107" : "#e4e5e9"
+                        }
+                        onClick={() => setRecipe({ ...recipe, rating: star })}
+                        style={{ cursor: "pointer" }}
                       />
                     ))}
+                    <span className="ms-2">
+                      {recipe.rating > 0 ? (
+                        <span className="text-primary">
+                          {recipe.rating}{" "}
+                          {recipe.rating === 1 ? "star" : "stars"}
+                        </span>
+                      ) : (
+                        <span className="text-muted">Not rated</span>
+                      )}
+                    </span>
                   </div>
                 </Form.Group>
               </Col>
