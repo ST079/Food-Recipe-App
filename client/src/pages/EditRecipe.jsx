@@ -147,7 +147,7 @@ const EditRecipe = () => {
         console.log(key, value);
       }
 
-      await axios.put(`http://localhost:3000/api/v1/recipe/${id}`, formData, {
+      await axios.put(`${API_URL}/recipe/${id}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
