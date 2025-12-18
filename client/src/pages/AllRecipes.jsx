@@ -147,10 +147,11 @@ const AllRecipes = ({ recipes, setRecipes }) => {
                   src={
                     recipe.img.startsWith("http")
                       ? recipe.img
-                      : `http://localhost:3000${recipe.img}`
+                      : `https://food-recipe-app-server.onrender.com${recipe.img}`
                   }
                   className="recipe-image"
                 />
+                {console.log(recipe.img)}
                 <Card.Body>
                   <div className="d-flex justify-content-between mb-2">
                     <span className="text-muted">

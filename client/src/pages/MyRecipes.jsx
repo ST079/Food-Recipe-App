@@ -127,7 +127,7 @@ const MyRecipes = ({ recipes, setRecipes }) => {
                             src={
                               recipe.img.startsWith("http")
                                 ? recipe.img
-                                : `http://localhost:3000${recipe.img}`
+                                : `https://food-recipe-app-server.onrender.com${recipe.img}`
                             }
                             className="recipe-image"
                           />
