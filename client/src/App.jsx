@@ -18,17 +18,18 @@ import NotFound from "./pages/NotFound"
 
 const App = () => {
   const [recipes, setRecipes] = React.useState([]);
+  const API_URL = import.meta.env.VITE_API_URL;
   React.useEffect(() => {
     const fetchRecipes = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/api/v1/recipe");
+        const res = await axios.get(`${API_URL}/recipe`);
         setRecipes(res.data.data);
       } catch (error) {
         console.error("Error fetching recipes:", error);
       }
     };
     fetchRecipes();
-  }, [recipes]);
+  }, [recipes, API_URL]);
 
   return (
     <Routes>
@@ -41,7 +42,7 @@ const App = () => {
         />
         <Route path="/recipes/:id" element={<RecipeDetails />} />
         <Route path="/add-recipe" element={<AddRecipe />} />
-        <Route path="/edit-recipe/:id" element={<EditRecipe/>} />
+        <Route path="/edit-recipe/:id" element={<EditRecipe />} />
         <Route path="/my-recipes" element={<MyRecipes recipes={recipes} setRecipes={setRecipes} />} />
         <Route path="/favourites" element={<Favourites recipes={recipes} setRecipes={setRecipes} />} />
         <Route path="/user/sign-up" element={<Signup />} />

@@ -23,16 +23,18 @@ import axios from "axios";
 import { useEffect } from "react";
 
 const Login = () => {
+const API_URL = import.meta.env.VITE_API_URL;
+
   const navigate = useNavigate();
-  const [email, setEmail] = React.useState("admin@gmail.com");
-  const [password, setPassword] = React.useState("admin123");
+  const [email, setEmail] = React.useState("user@gmail.com");
+  const [password, setPassword] = React.useState("user123");
   const [error, setError] = React.useState("");
 
   const handelSubmit = async (e) => {
     e.preventDefault();
     // Handle login logic here
     await axios
-      .post("http://localhost:3000/api/v1/user/login", { email, password })
+      .post(`${API_URL}/user/login`, { email, password })
       .then((res) => {
         localStorage.setItem("token", res.data.token);
         localStorage.setItem("user", res.data.user);

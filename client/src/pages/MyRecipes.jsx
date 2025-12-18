@@ -27,6 +27,7 @@ import axios from "axios";
 import RecipeNotification from "../components/RecipeNotification";
 
 const MyRecipes = ({ recipes, setRecipes }) => {
+  const API_URL = import.meta.env.VITE_API_URL;
    const[showDeleteNotification, setShowDeleteNotification] = useState("");
   const MyRecipes = recipes.filter(
     (recipe) => recipe.author === localStorage.getItem("user")
@@ -53,7 +54,7 @@ const MyRecipes = ({ recipes, setRecipes }) => {
   });
 
   const deleteRecipe = async (id) => {
-    await axios.delete(`http://localhost:3000/api/v1/recipe/${id}`);
+    await axios.delete(`${API_URL}/recipe/${id}`);
     setRecipes(recipes.filter((recipe) => recipe._id !== id));
     setShowDeleteNotification(true);
   };
@@ -126,7 +127,7 @@ const MyRecipes = ({ recipes, setRecipes }) => {
                             src={
                               recipe.img.startsWith("http")
                                 ? recipe.img
-                                : `http://localhost:3000${recipe.img}`
+                                : `https://food-recipe-app-server.onrender.com${recipe.img}`
                             }
                             className="recipe-image"
                           />

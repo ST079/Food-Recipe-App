@@ -27,6 +27,7 @@ const EditRecipe = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [error, setError] = useState(null);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   // Sample recipe data - in a real app, you'd fetch this based on the ID
   const [recipe, setRecipe] = useState({
@@ -54,7 +55,7 @@ const EditRecipe = () => {
   useEffect(() => {
     const fetchRecipe = async () => {
       const result = await axios.get(
-        `http://localhost:3000/api/v1/recipe/${id}`
+        `${API_URL}/recipe/${id}`
       );
       if (!result) {
         setError("Recipe not found");
@@ -64,7 +65,7 @@ const EditRecipe = () => {
     };
 
     fetchRecipe();
-  }, [id]);
+  }, [id,API_URL]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

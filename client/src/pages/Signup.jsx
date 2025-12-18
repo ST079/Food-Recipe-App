@@ -30,6 +30,8 @@ const Signup = () => {
   const [error, setError] = React.useState("");
   const navigate = useNavigate();
 
+  const API_URL = import.meta.env.VITE_API_URL;
+  // console.log("API_URL", API_URL) 
   // console.log("passeword", password)
   // console.log("confirmPassword", confirmPassword)
 
@@ -40,7 +42,7 @@ const Signup = () => {
       setError("Passwords do not match");
     }
     await axios
-      .post("http://localhost:3000/api/v1/user/signup", {
+      .post(`${API_URL}/user/signup`, {
         username,
         email,
         password,

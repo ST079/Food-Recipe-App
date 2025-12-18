@@ -27,6 +27,7 @@ import { useEffect } from "react";
 import RecipeNotification from "../components/RecipeNotification";
 
 const AllRecipes = ({ recipes, setRecipes }) => {
+  const API_URL = import.meta.env.VITE_API_URL;
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [activePage, setActivePage] = useState(1);
@@ -51,7 +52,7 @@ const AllRecipes = ({ recipes, setRecipes }) => {
     );
 
     try {
-      await axios.patch(`http://localhost:3000/api/v1/recipe/${id}/favourite`);
+      await axios.patch(`${API_URL}/recipe/${id}/favourite`);
       setShowSuccessNotification(true);
     } catch (error) {
       console.error("Error toggling favorite:", error);

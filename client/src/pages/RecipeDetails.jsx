@@ -28,6 +28,7 @@ import "../styles/RecipeDetails.css";
 import axios from "axios";
 
 const RecipeDetails = () => {
+  const API_URL = import.meta.env.VITE_API_URL;
   const { id } = useParams();
   const navigate = useNavigate();
   const [recipe, setRecipe] = React.useState({
@@ -45,13 +46,13 @@ const RecipeDetails = () => {
   useEffect(() => {
     const fetchRecipe = async () => {
       const result = await axios.get(
-        `http://localhost:3000/api/v1/recipe/${id}`
+        `${API_URL}/recipe/${id}`
       );
       console.log(result.data.data);
       setRecipe(result.data.data);
     };
     fetchRecipe();
-  }, [id]);
+  }, [id, API_URL]);
 
   return (
     <Container className="recipe-details-container py-4">
@@ -71,7 +72,7 @@ const RecipeDetails = () => {
               src={
                 recipe.img.startsWith("http")
                   ? recipe.img
-                  : `http://localhost:3000${recipe.img}`
+                  : `https://food-recipe-app-server.onrender.com${recipe.img}`
               }
               alt={recipe.title}
               className="recipe-main-image"

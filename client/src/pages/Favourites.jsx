@@ -15,6 +15,7 @@ import { useEffect, useState } from "react";
 import RecipeNotification from "../components/RecipeNotification";
 
 const Favorites = ({ recipes, setRecipes }) => {
+  const API_URL = import.meta.env.VITE_API_URL;
   // Get favorite recipes
   const [showSuccessNotification, setShowSuccessNotification] = useState("");
   const favoriteRecipes = recipes.filter((recipe) => recipe.isFavorite);
@@ -29,7 +30,7 @@ const Favorites = ({ recipes, setRecipes }) => {
     );
 
     try {
-      await axios.patch(`http://localhost:3000/api/v1/recipe/${id}/favourite`);
+      await axios.patch(`${API_URL}/recipe/${id}/favourite`);
       setShowSuccessNotification(true);
     } catch (error) {
       console.error("Error toggling favorite:", error);
@@ -69,7 +70,7 @@ const Favorites = ({ recipes, setRecipes }) => {
                   src={
                     recipe.img.startsWith("http")
                       ? recipe.img
-                      : `http://localhost:3000${recipe.img}`
+                      : `https://food-recipe-app-server.onrender.com${recipe.img}`
                   }
                   className="recipe-image"
                 />
@@ -93,7 +94,7 @@ const Favorites = ({ recipes, setRecipes }) => {
                 <Card.Footer className="bg-white border-0">
                   <Button
                     as={Link}
-                    to={`/recipe/${recipe._id}`}
+                    to={`/recipes/${recipe._id}`}
                     variant="outline-primary"
                     size="sm"
                   >
