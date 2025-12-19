@@ -220,9 +220,7 @@ const EditRecipe = () => {
                           src={
                             imagePreview.startsWith("blob:")
                               ? imagePreview
-                              : imagePreview.startsWith("http")
-                                ? imagePreview
-                                : `${import.meta.env.VITE_API_URL}${imagePreview}`
+                              : `https://food-recipe-app-server.onrender.com${imagePreview}`
                           }
                           alt="Recipe preview"
                           className="img-fluid rounded"
